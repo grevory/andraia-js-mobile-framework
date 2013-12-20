@@ -108,7 +108,7 @@ In your HTML template
 
 ```html
 <div id="loginView">
-  <p>Welcome <%= format %><\/p>
+  <p>Welcome <%= format %></p>
 </div>
 ```
 
