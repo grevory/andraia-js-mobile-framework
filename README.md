@@ -47,7 +47,6 @@ The template can come from your HTML
 ```html
 <script id="loginView" type="text/html">
   <form class="login-form" role="form">
-    <p>Welcome <%= format %></p>
     <div class="form-group">
       <label>E-mail</label>
       <input 
@@ -104,6 +103,14 @@ app.template = function(template, data) {
 The template function takes two parameters always. The HTML as a string and data as an object.
 
 By adding the template function Andraia will automatically render the template substituing your template values. Using the example above
+
+In your HTML template
+
+```html
+<div id="loginView">
+  <p>Welcome <%= format %></p>
+</div>
+```
 
 ```javascript
 var loginCtrl = function() {
