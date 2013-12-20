@@ -15,15 +15,15 @@ app.template = function(template, data) {
   // Use Underscore's templating
   var compiled = _.template(template);
   return compiled(data);
-}
+};
 
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
-app.view('loginView', function(){
-  console.log('controller loaded'); 
-  $('[name=email]').click(function(e){
-    e.preventDefault();
+var loginCtrl = function() {
+  $('[name=email]').focus(function(e){
     console.log($('[name=email]').val());
   });
-}, {
+};
+var loginData = {
   "format": "Game Sprite"
-});
+};
+app.view('loginView', loginCtrl, loginData);

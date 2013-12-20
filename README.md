@@ -35,20 +35,84 @@ var user = app.model('User', function() {
 console.log("User's name", user.fullName);
 ```
 
-You can design it any way you like.
+As long as your model is a function and it returns something you can design it however you like.
+
+Views
+-----
+
+You can load a view with a controller for each page of your app. 
+
+The template can come from your HTML
+
+```html
+<script id="loginView" type="text/html">
+  <form class="login-form" role="form">
+    <p>Welcome <%= format %></p>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input 
+        type="text"
+        name="email"
+        class="form-control"
+        placeholder="E-mail">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        name="password"
+        class="form-control"
+        placeholder="Password">
+    </div>
+    <button 
+      type="submit" 
+      class="btn btn-default">
+      Log in
+    </button>
+  </form>
+</script>
+```
+
+The first parameter is the name of the ID of the HTML element.
+
+The second parameter is the controller function that will handle bindings and data.
 
 ```javascript
-var app = new Andraia('game-cube');
-var user = app.model('User', function() {
-  var firstName = 'Enzo';
-  var lastName = 'Matrix';
-  var getFullName = function() {
-    return this.firstName + ' ' + this.lastName;
-  };
+var loginCtrl = function() {
+  $('[name=email]').focus(function(e){
+    console.log($('[name=email]').val());
+  });
+};
+app.view('loginView', loginCtrl);
+```
 
-  return {
-    fullName: getFullName
-  }
-});
-console.log("User's name", user.fullName);
+Templating
+----------
+
+You can actually use whatever you for templating.
+
+Let's say you want to use Underscore.JS.
+
+```javascript
+app.template = function(template, data) {
+  // Use Underscore's templating
+  var compiled = _.template(template);
+  return compiled(data);
+};
+```
+
+The template function takes two parameters always. The HTML as a string and data as an object.
+
+By adding the template function Andraia will automatically render the template substituing your template values. Using the example above
+
+```javascript
+var loginCtrl = function() {
+  $('[name=email]').focus(function(e){
+    console.log($('[name=email]').val());
+  });
+};
+var loginData = {
+  "format": "Game Sprite"
+};
+app.view('loginView', loginCtrl, loginData);
 ```
