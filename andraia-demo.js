@@ -17,11 +17,18 @@ app.template = function(template, data) {
   return compiled(data);
 };
 
+app.injectHelper('add', function(a, b){
+  return a + b;
+});
+
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
-var loginCtrl = function() {
+var loginCtrl = function(helper) {
   $('[name=email]').focus(function(e){
     console.log($('[name=email]').val());
   });
+
+  var sum = helper.add(1,2);
+  console.log(sum);
 };
 var loginData = {
   "format": "Game Sprite"

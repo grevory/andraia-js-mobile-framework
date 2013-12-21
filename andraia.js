@@ -43,6 +43,11 @@ function Andraia(elementContainerId) {
     }
   };
 
+  this.helpers = {};
+  this.injectHelper = function(name, helperFunction) {
+    this.helpers[name] = helperFunction;
+  };
+
   this.controllers = {};
 
   this.view = function(viewName, controllerFunction, data) {
@@ -65,7 +70,7 @@ function Andraia(elementContainerId) {
     $(elementContainerId).html(this.template(_template, data));
 
     if ($(this.controllers).size() > 0 && $.isFunction(this.controllers[viewName])) {
-      _controller = new this.controllers[viewName]();
+      _controller = new this.controllers[viewName](this.helpers);
     }
   };
 
