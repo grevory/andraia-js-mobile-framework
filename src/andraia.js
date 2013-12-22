@@ -1,9 +1,21 @@
+/**
+ * Andraia
+ * A lightweight javascript MVC framework for building simple mobile apps.
+ *
+ * version 0.0.1
+ * MIT License (see LICENSE.txt)
+ *
+ * Instantiate Andraia on a container element
+ *
+ * elementContainerId: The ID attribute of the container element
+ */
 function Andraia(elementContainerId) {
 
   var self = this,
       defaultSettings = {},
       userSettings = {},
       getElementId,
+      _templateEngine,
       error = null, 
       debugError = null;
 
@@ -11,6 +23,14 @@ function Andraia(elementContainerId) {
     'templateDirectory': 'templates/'
   }
 
+  // Data in memory
+  this.controllers = {};
+  this.models = {};
+  this.helpers = {};
+  this.templates = {};
+
+  
+  // Adds a hash to an element ID if it is not there for jQuery selectors
   getElementId = function(id) {
     if (id.charAt(0) !== '#') {
       return '#' + id;
@@ -20,6 +40,8 @@ function Andraia(elementContainerId) {
 
   elementContainerId = getElementId(elementContainerId);
 
+
+  // Handle errors in the app
   this.error = function(errorMessage, debugMessage) {
     if (!errorMessage) {
       return error;
@@ -30,8 +52,9 @@ function Andraia(elementContainerId) {
     // alert(errorMessage);
   };
 
-  this.models = {};
 
+  // Model
+  // A generic function for handling models
   this.model = function(modelName, modelFunction) {
 
     var modelLoaded = null;
@@ -47,16 +70,25 @@ function Andraia(elementContainerId) {
     }
   };
 
-  this.helpers = {};
+  // Add a model to memory
+  // Shortcut to model()
+  this.createModel = function(modelName, modelFunction) {
+    self.model(modelName, modelFunction);
+  };
+
+  // Grab the model for your app
+  this.loadModel = function(modelName) {
+    self.model(modelName);
+  };
+
+
+  // Add helpers to memory for reusable functions
   this.injectHelper = function(name, helperFunction) {
     self.helpers[name] = helperFunction;
   };
 
-  this.controllers = {};
 
   // This is where we store laoded templates
-  this.templates = {};
-
   loadTemplate = function(id) {
     var _templateCache = self.templates,
         _elementId = getElementId(id),
@@ -80,33 +112,46 @@ function Andraia(elementContainerId) {
     });
 
     return deferred;
-
-     console.log('there?',_templateCache[id], !!_templateCache[id]);
-    if (!_templateCache[id]) {
-      self.error('Could not load template');
-    }
-    return _templateCache[id];
   };
 
+
+  // The generic view method for loading views and storing controllers
   this.view = function(viewName, controllerFunction, data) {
 
-    var _template, _controller, _templateEngine;
+    var _template, _controller;
 
-    // Load this as a controller if it is a function and isn't already loaded
+    // Add the controller function to memory
     if ($.isFunction(controllerFunction) && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
       self.controllers[viewName] = controllerFunction;
     }
 
+    // Load the template. When the template is loaded we will apply any 
+    // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function(){
       _template = self.templates[viewName];
+      // Put the template in the main container element
       $(elementContainerId).html(self.template(_template, data));
+      // If there is a controller for this view, load it
       if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
-      _controller = new self.controllers[viewName](self.helpers);
-    }
+        _controller = new self.controllers[viewName](self.helpers);
+      }
     });
   };
 
+  // Shortcut to view specifically for adding controllers to memory
+  this.createController = function(viewName, controllerFunction) {
+    return self.view(viewName, controllerFunction);
+  };
+
+  // Shortcut to view specifically for loading a view
+  this.loadView = function(viewName) {
+    return self.view(viewName);
+  };
+
+
+  // Define how the template is to be rendered. 
   _templateEngine = function(template, data) {
+    // Use Underscore's templating
     if ($.isFunction(_)) {
       return function(template, data) {
         var compiled = _.template(_template);
@@ -115,6 +160,8 @@ function Andraia(elementContainerId) {
     }
   }
 
+
+  // A generic function for handling templates
   this.template = function(template, data) {
     // Set the template engine if a function is passed
     if ($.isFunction(template)) {
@@ -135,5 +182,10 @@ function Andraia(elementContainerId) {
     }
 
     return _templateEngine(template, data);
+  };
+
+  // A shortcut for adding templating to the app
+  this.injectTemplating = function(templateFunction) {
+    return self.template(templateFunction);
   };
 }
