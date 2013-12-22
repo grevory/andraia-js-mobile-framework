@@ -1,17 +1,21 @@
 function Andraia(elementContainerId) {
 
-  var error = null, debugError = null;
+  var self = this,
+      defaultSettings = {},
+      userSettings = {},
+      getElementId,
+      error = null, 
+      debugError = null;
 
-  var getElementId = function(id) {
+  defaultSettings = {
+    'templateDirectory': 'templates/'
+  }
+
+  getElementId = function(id) {
     if (id.charAt(0) !== '#') {
       return '#' + id;
     }
-    
-    if ($(id).size() > 0) {
-      return id;
-    }
-
-    return null;
+    return id;
   };
 
   elementContainerId = getElementId(elementContainerId);
@@ -33,45 +37,74 @@ function Andraia(elementContainerId) {
     var modelLoaded = null;
 
     if ($.isFunction(modelFunction)) {
-      this.models[modelName] = modelFunction;
-      console.log('Models registered',this.models);
+      self.models[modelName] = modelFunction;
+      console.log('Models registered',self.models);
     }
 
-    if (!modelFunction && $.isFunction(this.models[modelName])) {
-      modelLoaded = new this.models[modelName]();
+    if (!modelFunction && $.isFunction(self.models[modelName])) {
+      modelLoaded = new self.models[modelName]();
       return modelLoaded;
     }
   };
 
   this.helpers = {};
   this.injectHelper = function(name, helperFunction) {
-    this.helpers[name] = helperFunction;
+    self.helpers[name] = helperFunction;
   };
 
   this.controllers = {};
+
+  // This is where we store laoded templates
+  this.templates = {};
+
+  loadTemplate = function(id) {
+    var _templateCache = self.templates,
+        _elementId = getElementId(id),
+        deferred = $.Deferred();
+
+    if (_templateCache[id]) {
+      deferred.resolve();
+      return deferred;
+    }
+
+    if ($(_elementId).size() > 0) {
+      // Load the template into memory
+      _templateCache[id] = $(_elementId).html();
+      deferred.resolve();
+      return deferred;
+    }
+
+    $.get(defaultSettings.templateDirectory + id + '.html', function(html) {
+      _templateCache[id] = html;
+      deferred.resolve();
+    });
+
+    return deferred;
+
+     console.log('there?',_templateCache[id], !!_templateCache[id]);
+    if (!_templateCache[id]) {
+      self.error('Could not load template');
+    }
+    return _templateCache[id];
+  };
 
   this.view = function(viewName, controllerFunction, data) {
 
     var _template, _controller, _templateEngine;
 
     // Load this as a controller if it is a function and isn't already loaded
-    if ($.isFunction(controllerFunction) && ($(this.controllers).size() < 1 || !$.isFunction(this.controllers[viewName]))) {
-      this.controllers[viewName] = controllerFunction;
+    if ($.isFunction(controllerFunction) && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
+      self.controllers[viewName] = controllerFunction;
     }
 
-    elementIdentifier = getElementId(viewName);
-
-    if (!elementIdentifier) {
-      this.error('No element id ' + id + ' found');
+    loadTemplate(viewName).done(function(){
+      console.log('loadTemplate() done', self.templates[viewName]);
+      _template = self.templates[viewName];
+      $(elementContainerId).html(self.template(_template, data));
+      if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
+      _controller = new self.controllers[viewName](self.helpers);
     }
-
-    _template = $(elementIdentifier).html();
-
-    $(elementContainerId).html(this.template(_template, data));
-
-    if ($(this.controllers).size() > 0 && $.isFunction(this.controllers[viewName])) {
-      _controller = new this.controllers[viewName](this.helpers);
-    }
+    });
   };
 
   _templateEngine = function(template, data) {
@@ -91,7 +124,7 @@ function Andraia(elementContainerId) {
     }
 
     if (!_templateEngine) {
-      this.error('No template engine loaded');
+      self.error('No template engine loaded');
     }
 
     if (!template) {
