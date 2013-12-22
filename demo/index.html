@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>Andraia - Lightweight Mobile MVC Framework</title>
+    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootswatch/3.0.3/yeti/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <a class="navbar-brand" href="#">Andraia</a>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>A Lightweight Mobile MVC Framework</h2>
+
+  <p></p>
+
+  <div id="game-cube"></div>
+</div>
+
+<script id="loginView2" type="text/html">
+  <form class="login-form" role="form">
+    <p>Welcome <%= format %>!</p>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input 
+        type="text"
+        name="email"
+        class="form-control"
+        placeholder="E-mail">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        name="password"
+        class="form-control"
+        placeholder="Password">
+    </div>
+    <button 
+      type="submit" 
+      class="btn btn-default">
+      Log in
+    </button>
+  </form>
+</script>
+
+<script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="../src/andraia.js"></script>
+<script src="demo-app.js"></script>
+
+</body>
+</html>
