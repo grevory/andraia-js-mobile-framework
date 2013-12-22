@@ -73,12 +73,12 @@ function Andraia(elementContainerId) {
   // Add a model to memory
   // Shortcut to model()
   this.createModel = function(modelName, modelFunction) {
-    self.model(modelName, modelFunction);
+    return self.model(modelName, modelFunction);
   };
 
   // Grab the model for your app
   this.loadModel = function(modelName) {
-    self.model(modelName);
+    return self.model(modelName);
   };
 
 
@@ -154,7 +154,7 @@ function Andraia(elementContainerId) {
     // Use Underscore's templating
     if ($.isFunction(_)) {
       return function(template, data) {
-        var compiled = _.template(_template);
+        var compiled = _.template(template);
         return compiled(data);
       };
     }

@@ -1,6 +1,6 @@
 var app = new Andraia('game-cube');
 
-app.model('User', function() {
+app.createModel('User', function() {
   this.firstName = 'Enzo';
   this.lastName = 'Matrix';
   this.fullName = function() {
@@ -8,14 +8,14 @@ app.model('User', function() {
   };
 });
 
-var user = app.model('User');
+var user = app.loadModel('User');
 console.log(user.fullName());
 
-app.template = function(template, data) {
+app.injectTemplating(function(template, data) {
   // Use Underscore's templating
   var compiled = _.template(template);
   return compiled(data);
-};
+});
 
 app.injectHelper('add', function(a, b){
   return a + b;
