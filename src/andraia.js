@@ -36,6 +36,7 @@ function Andraia(elementContainerId) {
   this.models = {};
   this.helpers = {};
   this.templates = {};
+  this.templateData = {};
 
   
   // Adds a hash to an element ID if it is not there for jQuery selectors
@@ -139,17 +140,22 @@ function Andraia(elementContainerId) {
     var _template, _controller;
 
     // Add the controller function to memory
-    if ($.isFunction(controllerFunction) && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
+    if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
       self.controllers[viewName] = controllerFunction;
+    }
+
+    if (!!data) {
+      self.templateData[viewName] = data;
     }
 
     // Load the template. When the template is loaded we will apply any 
     // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function(){
+      // Fetch the template for this view from memory
       _template = self.templates[viewName];
-      // Put the template in the main container element
-      // $(elementContainerId).html();
-      _template = self.template(_template, data);
+      // Run the templating engine on the template using any user-defined data
+      _template = self.template(_template, self.templateData[viewName]);
+      // Slide the page to this view
       slider.slidePage($(_template), "left");
       // If there is a controller for this view, load it
       if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
@@ -200,7 +206,7 @@ function Andraia(elementContainerId) {
       return '';
     }
 
-    template = '<div>' + _templateHeader + template + _templateFooter + '</div>';
+    template = '<div>' + _templateHeader + _templateEngine(template) + _templateFooter + '</div>';
 
     if (!data) {
       return template;

@@ -26,7 +26,7 @@ app.injectHelper('add', function(a, b){
 
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
 var loginCtrl = function(helper) {
-  $('[name=email]').focus(function(e){
+  $('[name=email]').blur  (function(e){
     console.log($('[name=email]').val());
   });
 
