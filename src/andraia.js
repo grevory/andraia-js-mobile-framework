@@ -28,10 +28,7 @@ function Andraia(elementContainerId, userSettings) {
     'enablePageslider': true,
     'enableFastclick': true,
 
-    'useUnderscoreTemplating': false,
-    'useHandlebarsTemplating': false,
-    'useMustacheTemplating': false,
-    'useEjsTemplating': false,
+    'templateEngine': '',
 
     'pageTransitionSpeed': 0.25
   };
@@ -200,24 +197,32 @@ function Andraia(elementContainerId, userSettings) {
 
     if (!data) return template;
 
+    function isEngine(engineType) {
+      // Get the lowercase version of the template engine name (for consistency)
+      usersTemplateEngine = settings.templateEngine.toLowerCase();
+      // Check for this engine type in the users selected template engine
+      // E.g. search for "mustache in Mustache.js"
+      return usersTemplateEngine.indexOf(engineType) >= 0;
+    }
+
     // Use Underscore's templating
-    if (typeof _ !== "undefined" && $.isFunction(_) && settings.useUnderscoreTemplating) {
+    if (typeof _ !== "undefined" && $.isFunction(_) && isEngine('underscore')) {
       var compiled = _.template(template);
       return compiled(data);
     }
 
     // Use Handlebar's templating
-    if (typeof Handlebars !== "undefined" && settings.useHandlebarsTemplating) {
+    if (typeof Handlebars !== "undefined" && isEngine('handlebars')) {
       var compiled = Handlebars.compile(template);
       template = compiled(data);
     }
 
     // Use Mustache's templating
-    if (typeof Mustache !== "undefined" && settings.useMustacheTemplating) {
+    if (typeof Mustache !== "undefined" && isEngine('mustache')) {
       template = Mustache.render(template, data);
     }
 
-    if (typeof EJS !== "undefined" && settings.useEjsTemplating) {
+    if (typeof EJS !== "undefined" && isEngine('ejs')) {
       template = new EJS({text: template}).render(data);
     }
 

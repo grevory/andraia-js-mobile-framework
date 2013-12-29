@@ -1,6 +1,6 @@
 var app = new Andraia('game-cube', {
   'pageTransitionSpeed': 0.6,
-  'useUnderscoreTemplating': true
+  'templateEngine': 'Underscore.JS'
 });
 
 app.createModel('User', function() {
