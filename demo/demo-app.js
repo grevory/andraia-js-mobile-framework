@@ -1,4 +1,4 @@
-var app = new Andraia('game-cube', {'pageTransitionSpeed': 2});
+var app = new Andraia('game-cube');
 
 app.createModel('User', function() {
   this.firstName = 'Enzo';

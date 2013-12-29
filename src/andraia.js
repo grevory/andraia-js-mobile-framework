@@ -30,10 +30,10 @@ function Andraia(elementContainerId, userSettings) {
 
     'useUnderscoreTemplating': true,
 
-    'pageTransitionSpeed': 0.5
+    'pageTransitionSpeed': 0.25
   };
 
-  settings = $.extend(defaultSettings, userSettings);
+  $.extend(settings, defaultSettings, userSettings);
 
   // Data in memory
   this.controllers = {};
@@ -64,13 +64,18 @@ function Andraia(elementContainerId, userSettings) {
     slider = new PageSlider($(elementContainerId));
   }
 
-  $('link[rel=stylesheet]:last-child').after(' ' +
-'<style>' +
-'  .page.transition {' +
-'    -webkit-transition-duration: ' + settings.pageTransitionSpeed + 's;' +
-'    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
-'  }' +
-'</style>');
+  if (settings.pageTransitionSpeed != defaultSettings.pageTransitionSpeed) {
+    // Add styles to overwrite the page transition speed at the end of the head
+    // The default is 0.25. 
+    // Don't bother with the overwrite if the user is using the default
+    $('head').append(' ' +
+      '<style>' +
+      '  .page.transition {' +
+      '    -webkit-transition-duration: ' + settings.pageTransitionSpeed + 's;' +
+      '    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
+      '  }' +
+      '</style>');
+  }
 
 
   // Handle errors in the app
