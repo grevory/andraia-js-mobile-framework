@@ -9,11 +9,11 @@
  *
  * elementContainerId: The ID attribute of the container element
  */
-function Andraia(elementContainerId) {
+function Andraia(elementContainerId, userSettings) {
 
   var self = this,
       defaultSettings = {},
-      userSettings = {},
+      settings = {},
       getElementId,
       slider,
       _templateEngine,
@@ -32,6 +32,8 @@ function Andraia(elementContainerId) {
 
     'pageTransitionSpeed': 0.5
   };
+
+  settings = $.extend(defaultSettings, userSettings);
 
   // Data in memory
   this.controllers = {};
@@ -52,21 +54,21 @@ function Andraia(elementContainerId) {
   if (!elementContainerId) elementContainerId = 'body';
   else elementContainerId = getElementId(elementContainerId);
 
-  if (defaultSettings.enableFastclick) {
+  if (settings.enableFastclick) {
     window.addEventListener('load', function () {
       new FastClick(document.body);
     }, false);
   }
 
-  if (defaultSettings.enablePageslider) {
+  if (settings.enablePageslider) {
     slider = new PageSlider($(elementContainerId));
   }
 
   $('link[rel=stylesheet]:last-child').after(' ' +
 '<style>' +
 '  .page.transition {' +
-'    -webkit-transition-duration: ' + defaultSettings.pageTransitionSpeed + 's;' +
-'    transition-duration: ' + defaultSettings.pageTransitionSpeed + 's;' +
+'    -webkit-transition-duration: ' + settings.pageTransitionSpeed + 's;' +
+'    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
 '  }' +
 '</style>');
 
@@ -135,7 +137,7 @@ function Andraia(elementContainerId) {
       return deferred;
     }
 
-    $.get(defaultSettings.templateDirectory + id + '.html', function(html) {
+    $.get(settings.templateDirectory + id + '.html', function(html) {
       _templateCache[id] = html;
       deferred.resolve();
     });
@@ -191,7 +193,7 @@ function Andraia(elementContainerId) {
     if (!data) return template;
 
     // Use Underscore's templating
-    if ($.isFunction(_) && defaultSettings.useUnderscoreTemplating) {
+    if ($.isFunction(_) && settings.useUnderscoreTemplating) {
       var compiled = _.template(template);
       return compiled(data);
     }
