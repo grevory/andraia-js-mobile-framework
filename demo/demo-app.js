@@ -40,5 +40,5 @@ app.view('loginView', loginCtrl, loginData);
 
 window.addEventListener('hashchange', function () {
   if (window.location.hash === '#loginView') return app.view('loginView');
-  app.view('testView');
+  app.view('andraiaView');
 });

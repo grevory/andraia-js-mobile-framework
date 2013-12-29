@@ -28,7 +28,9 @@ function Andraia(elementContainerId) {
     'enablePageslider': true,
     'enableFastclick': true,
 
-    'useUnderscoreTemplating': true
+    'useUnderscoreTemplating': true,
+
+    'pageTransitionSpeed': 0.5
   };
 
   // Data in memory
@@ -59,6 +61,14 @@ function Andraia(elementContainerId) {
   if (defaultSettings.enablePageslider) {
     slider = new PageSlider($(elementContainerId));
   }
+
+  $('link[rel=stylesheet]:last-child').after(' ' +
+'<style>' +
+'  .page.transition {' +
+'    -webkit-transition-duration: ' + defaultSettings.pageTransitionSpeed + 's;' +
+'    transition-duration: ' + defaultSettings.pageTransitionSpeed + 's;' +
+'  }' +
+'</style>');
 
 
   // Handle errors in the app
