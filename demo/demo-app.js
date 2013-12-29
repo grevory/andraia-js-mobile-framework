@@ -38,7 +38,9 @@ var loginData = {
 };
 app.view('loginView', loginCtrl, loginData);
 
+// Sample router
 window.addEventListener('hashchange', function () {
-  if (window.location.hash === '#loginView') return app.view('loginView');
+  if (window.location.hash === '#loginView') 
+    return app.view('loginView');
   app.view('andraiaView');
 });
