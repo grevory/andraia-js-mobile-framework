@@ -28,7 +28,10 @@ function Andraia(elementContainerId, userSettings) {
     'enablePageslider': true,
     'enableFastclick': true,
 
-    'useUnderscoreTemplating': true,
+    'useUnderscoreTemplating': false,
+    'useHandlebarsTemplating': false,
+    'useMustacheTemplating': false,
+    'useEjsTemplating': false,
 
     'pageTransitionSpeed': 0.25
   };
@@ -198,9 +201,24 @@ function Andraia(elementContainerId, userSettings) {
     if (!data) return template;
 
     // Use Underscore's templating
-    if ($.isFunction(_) && settings.useUnderscoreTemplating) {
+    if (typeof _ !== "undefined" && $.isFunction(_) && settings.useUnderscoreTemplating) {
       var compiled = _.template(template);
       return compiled(data);
+    }
+
+    // Use Handlebar's templating
+    if (typeof Handlebars !== "undefined" && settings.useHandlebarsTemplating) {
+      var compiled = Handlebars.compile(template);
+      template = compiled(data);
+    }
+
+    // Use Mustache's templating
+    if (typeof Mustache !== "undefined" && settings.useMustacheTemplating) {
+      template = Mustache.render(template, data);
+    }
+
+    if (typeof EJS !== "undefined" && settings.useEjsTemplating) {
+      template = new EJS({text: template}).render(data);
     }
 
     return template;
