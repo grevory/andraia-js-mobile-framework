@@ -11,11 +11,14 @@ app.createModel('User', function() {
 var user = app.loadModel('User');
 console.log(user.fullName());
 
-app.injectTemplating(function(template, data) {
-  // Use Underscore's templating
-  var compiled = _.template(template);
-  return compiled(data);
-});
+// app.injectTemplating(function(template, data) {
+//   // Use Underscore's templating
+//   var compiled = _.template(template);
+//   return compiled(data);
+// });
+
+app.injectTemplateHeader('#headerHtml');
+app.injectTemplateFooter('</div>');
 
 app.injectHelper('add', function(a, b){
   return a + b;
@@ -34,3 +37,8 @@ var loginData = {
   "format": "Game Sprite"
 };
 app.view('loginView', loginCtrl, loginData);
+
+window.addEventListener('hashchange', function () {
+  if (window.location.hash === '#loginView') return app.view('loginView');
+  app.view('testView');
+});

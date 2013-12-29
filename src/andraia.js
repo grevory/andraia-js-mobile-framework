@@ -15,13 +15,21 @@ function Andraia(elementContainerId) {
       defaultSettings = {},
       userSettings = {},
       getElementId,
+      slider,
       _templateEngine,
+      _templateHeader = '',
+      _templateFooter = '',
       error = null, 
       debugError = null;
 
   defaultSettings = {
-    'templateDirectory': 'templates/'
-  }
+    'templateDirectory': 'templates/',
+    
+    'enablePageslider': true,
+    'enableFastclick': true,
+
+    'useUnderscoreTemplating': true
+  };
 
   // Data in memory
   this.controllers = {};
@@ -38,7 +46,18 @@ function Andraia(elementContainerId) {
     return id;
   };
 
-  elementContainerId = getElementId(elementContainerId);
+  if (!elementContainerId) elementContainerId = 'body';
+  else elementContainerId = getElementId(elementContainerId);
+
+  if (defaultSettings.enableFastclick) {
+    window.addEventListener('load', function () {
+      new FastClick(document.body);
+    }, false);
+  }
+
+  if (defaultSettings.enablePageslider) {
+    slider = new PageSlider($(elementContainerId));
+  }
 
 
   // Handle errors in the app
@@ -61,7 +80,6 @@ function Andraia(elementContainerId) {
 
     if ($.isFunction(modelFunction)) {
       self.models[modelName] = modelFunction;
-      console.log('Models registered',self.models);
     }
 
     if (!modelFunction && $.isFunction(self.models[modelName])) {
@@ -130,7 +148,9 @@ function Andraia(elementContainerId) {
     loadTemplate(viewName).done(function(){
       _template = self.templates[viewName];
       // Put the template in the main container element
-      $(elementContainerId).html(self.template(_template, data));
+      // $(elementContainerId).html();
+      _template = self.template(_template, data);
+      slider.slidePage($(_template), "left");
       // If there is a controller for this view, load it
       if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
         _controller = new self.controllers[viewName](self.helpers);
@@ -151,13 +171,16 @@ function Andraia(elementContainerId) {
 
   // Define how the template is to be rendered. 
   _templateEngine = function(template, data) {
+
+    if (!data) return template;
+
     // Use Underscore's templating
-    if ($.isFunction(_)) {
-      return function(template, data) {
-        var compiled = _.template(template);
-        return compiled(data);
-      };
+    if ($.isFunction(_) && defaultSettings.useUnderscoreTemplating) {
+      var compiled = _.template(template);
+      return compiled(data);
     }
+
+    return template;
   }
 
 
@@ -177,6 +200,8 @@ function Andraia(elementContainerId) {
       return '';
     }
 
+    template = '<div>' + _templateHeader + template + _templateFooter + '</div>';
+
     if (!data) {
       return template;
     }
@@ -184,8 +209,37 @@ function Andraia(elementContainerId) {
     return _templateEngine(template, data);
   };
 
+  
   // A shortcut for adding templating to the app
   this.injectTemplating = function(templateFunction) {
     return self.template(templateFunction);
+  };
+
+
+  var extractTemplate = function(htmlString) {
+    // Convert header HTML to string
+    htmlString = "" + htmlString;
+
+    if (htmlString.indexOf('.html') > -1) {
+      self.error('This option is not yet available. Cannot load header or footer template from external file.');
+      return console.log('Go get template');
+    }
+
+    // If there are no HTML tags and the headerHtml string is the id of an element let's get the HTML of that element
+    if (htmlString.indexOf('<') < 0 && $(getElementId(htmlString)).size() > 0) {
+      htmlString = $(getElementId(htmlString)).html();
+    }
+
+    return htmlString;
+  };
+
+
+  this.injectTemplateHeader = function(headerHtml) {
+    _templateHeader = extractTemplate(headerHtml);
+  };
+
+
+  this.injectTemplateFooter = function(footerHtml) {
+    _templateFooter = extractTemplate(footerHtml);
   };
 }

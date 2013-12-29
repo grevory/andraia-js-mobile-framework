@@ -3,25 +3,30 @@
     <title>Andraia - Lightweight Mobile MVC Framework</title>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootswatch/3.0.3/yeti/bootstrap.min.css">
+    <link rel="stylesheet" href="../src/pageslider.css">
 </head>
 <body>
 
-<nav class="navbar navbar-default" role="navigation">
-  <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <a class="navbar-brand" href="#">Andraia</a>
+<div id="game-cube"></div>
+
+<script id="headerHtml" type="text/html">
+  <nav class="navbar navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Andraia</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>A Lightweight Mobile MVC Framework</h2>
+</script>
+
+<script id="footerHtml" type="text/html">
   </div>
-</nav>
-
-<div class="container">
-  <h2>A Lightweight Mobile MVC Framework</h2>
-
-  <p></p>
-
-  <div id="game-cube"></div>
-</div>
+</script>
 
 <script id="loginView2" type="text/html">
+<div>
   <form class="login-form" role="form">
     <p>Welcome <%= format %>!</p>
     <div class="form-group">
@@ -46,10 +51,23 @@
       Log in
     </button>
   </form>
+  <a href="#test" class="btn btn-primary">Switch views</a>
+</div>
+</script>
+
+
+<script id="testView" type="text/html">
+<div>
+  <h3>New view!</h3>
+  <p><img src="templates/andraia.jpg" width="100%"></p>
+  <p><a href="#loginView" class="btn btn-primary">Switch views</a></p>
+</div>
 </script>
 
 <script src="http://underscorejs.org/underscore-min.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="../src/fastclick.js"></script>
+<script src="../src/pageslider.js"></script>
 <script src="../src/andraia.js"></script>
 <script src="demo-app.js"></script>
 
