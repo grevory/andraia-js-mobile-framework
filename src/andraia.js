@@ -27,9 +27,11 @@ function Andraia(elementContainerId, userSettings) {
     
     'enablePageslider': true,
     'enableFastclick': true,
+    'enableRouter': true,
 
     'templateEngine': '',
 
+    'defaultPage': '#',
     'pageTransitionSpeed': 0.25
   };
 
@@ -50,33 +52,6 @@ function Andraia(elementContainerId, userSettings) {
     }
     return id;
   };
-
-  if (!elementContainerId) elementContainerId = 'body';
-  else elementContainerId = getElementId(elementContainerId);
-
-  if (settings.enableFastclick) {
-    window.addEventListener('load', function () {
-      new FastClick(document.body);
-    }, false);
-  }
-
-  if (settings.enablePageslider) {
-    slider = new PageSlider($(elementContainerId));
-  }
-
-  if (settings.pageTransitionSpeed != defaultSettings.pageTransitionSpeed) {
-    // Add styles to overwrite the page transition speed at the end of the head
-    // The default is 0.25. 
-    // Don't bother with the overwrite if the user is using the default
-    $('head').append(' ' +
-      '<style>' +
-      '  .page.transition {' +
-      '    -webkit-transition-duration: ' + settings.pageTransitionSpeed + 's;' +
-      '    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
-      '  }' +
-      '</style>');
-  }
-
 
   // Handle errors in the app
   this.error = function(errorMessage, debugMessage) {
@@ -142,7 +117,15 @@ function Andraia(elementContainerId, userSettings) {
       return deferred;
     }
 
-    $.get(settings.templateDirectory + id + '.html', function(html) {
+    // The html file should be based on the ID
+    var htmlFilename = id;
+
+    // The filename should not have a hash symbol
+    if (htmlFilename.indexOf('#') === 0) {
+      htmlFilename = htmlFilename.substr(1);
+    }
+
+    $.get(settings.templateDirectory + htmlFilename + '.html', function(html) {
       _templateCache[id] = html;
       deferred.resolve();
     });
@@ -155,6 +138,8 @@ function Andraia(elementContainerId, userSettings) {
   this.view = function(viewName, controllerFunction, data) {
 
     var _template, _controller;
+
+    viewName = getElementId(viewName);
 
     // Add the controller function to memory
     if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
@@ -288,4 +273,55 @@ function Andraia(elementContainerId, userSettings) {
   this.injectTemplateFooter = function(footerHtml) {
     _templateFooter = extractTemplate(footerHtml);
   };
+
+
+  if (!elementContainerId) elementContainerId = 'body';
+  else elementContainerId = getElementId(elementContainerId);
+
+  if (settings.enableFastclick) {
+    window.addEventListener('load', function () {
+      new FastClick(document.body);
+    }, false);
+  }
+
+
+  this.router = {
+    currentPage: window.location.hash,
+    changePage: function (pageId) {
+      pageId = getElementId(pageId);
+      self.router.currentPage = pageId;
+      self.view(pageId);
+    }
+  };
+
+  if (settings.enableRouter) {
+    window.addEventListener('hashchange', function () {
+      var pageHash = window.location.hash,
+          changePage = self.router.changePage;
+      if (!pageHash) 
+        return changePage(settings.defaultPage);
+      changePage(pageHash);
+    });
+  }
+
+  if (settings.pageTransitionSpeed != defaultSettings.pageTransitionSpeed) {
+    // Add styles to overwrite the page transition speed at the end of the head
+    // The default is 0.25. 
+    // Don't bother with the overwrite if the user is using the default
+    $('head').append(' ' +
+      '<style>' +
+      '  .page.transition {' +
+      '    -webkit-transition-duration: ' + settings.pageTransitionSpeed + 's;' +
+      '    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
+      '  }' +
+      '</style>');
+  }
+
+  if (settings.enablePageslider) {
+    // if (settings.enableRouter && self.router.currentPage.indexOf('#') === -1) {
+    //   self.router.changePage(settings.defaultPage);
+    // }
+
+    slider = new PageSlider($(elementContainerId));
+  }
 }

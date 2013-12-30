@@ -1,6 +1,7 @@
 var app = new Andraia('game-cube', {
   'pageTransitionSpeed': 0.6,
-  'templateEngine': 'Underscore.JS'
+  'templateEngine': 'Underscore.JS',
+  'defaultPage': 'loginView'
 });
 
 app.createModel('User', function() {
@@ -42,8 +43,8 @@ var loginData = {
 app.view('loginView', loginCtrl, loginData);
 
 // Sample router
-window.addEventListener('hashchange', function () {
-  if (window.location.hash === '#loginView') 
-    return app.view('loginView');
-  app.view('andraiaView');
-});
+// window.addEventListener('hashchange', function () {
+//   if (window.location.hash === '#loginView') 
+//     return app.view('loginView');
+//   app.view('andraiaView');
+// });
