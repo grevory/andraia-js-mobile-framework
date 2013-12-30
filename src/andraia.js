@@ -134,6 +134,22 @@ function Andraia(elementContainerId, userSettings) {
   };
 
 
+  this.registerView = function(viewName, controllerFunction, data) {
+
+    viewName = getElementId(viewName);
+
+    // If the action item is a function then it must be a controller.
+    // Add the controller function to memory
+    if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
+      self.controllers[viewName] = controllerFunction;
+    }
+
+    if (!!data) {
+      self.templateData[viewName] = data;
+    }
+  };
+
+
   // The generic view method for loading views and storing controllers
   this.view = function(viewName, controllerFunction, data) {
 
@@ -141,6 +157,7 @@ function Andraia(elementContainerId, userSettings) {
 
     viewName = getElementId(viewName);
 
+    // If the action item is a function then it must be a controller.
     // Add the controller function to memory
     if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
       self.controllers[viewName] = controllerFunction;
@@ -166,14 +183,23 @@ function Andraia(elementContainerId, userSettings) {
     });
   };
 
-  // Shortcut to view specifically for adding controllers to memory
-  this.createController = function(viewName, controllerFunction) {
-    return self.view(viewName, controllerFunction);
-  };
-
   // Shortcut to view specifically for loading a view
   this.loadView = function(viewName) {
-    return self.view(viewName);
+    viewName = getElementId(viewName);
+    // Load the template. When the template is loaded we will apply any 
+    // templating as necessary and load the controller for the view
+    loadTemplate(viewName).done(function(){
+      // Fetch the template for this view from memory
+      _template = self.templates[viewName];
+      // Run the templating engine on the template using any user-defined data
+      _template = self.template(_template, self.templateData[viewName]);
+      // Slide the page to this view
+      slider.slidePage($(_template), "left");
+      // If there is a controller for this view, load it
+      if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
+        _controller = new self.controllers[viewName](self.helpers);
+      }
+    });
   };
 
 
@@ -318,9 +344,9 @@ function Andraia(elementContainerId, userSettings) {
   }
 
   if (settings.enablePageslider) {
-    // if (settings.enableRouter && self.router.currentPage.indexOf('#') === -1) {
-    //   self.router.changePage(settings.defaultPage);
-    // }
+    if (settings.enableRouter && self.router.currentPage.indexOf('#') === -1) {
+      window.location.hash = getElementId(settings.defaultPage);
+    }
 
     slider = new PageSlider($(elementContainerId));
   }

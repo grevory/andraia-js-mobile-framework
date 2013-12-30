@@ -40,7 +40,15 @@ var loginCtrl = function(helper) {
 var loginData = {
   "format": "Game Sprite"
 };
-app.view('loginView', loginCtrl, loginData);
+app.registerView('loginView', loginCtrl, loginData);
+app.registerView('andraiaView', function(){
+  console.log('andraiaView');
+});
+app.registerView('thirdView', function(){
+  console.log('thirdView');
+}, {
+  'data': 'test'
+});
 
 // Sample router
 // window.addEventListener('hashchange', function () {
