@@ -19,6 +19,7 @@ function Andraia(elementContainerId, userSettings) {
       _templateEngine,
       _templateHeader = '',
       _templateFooter = '',
+      _loadedTemplate = '',
       error = null, 
       debugError = null;
 
@@ -31,7 +32,6 @@ function Andraia(elementContainerId, userSettings) {
 
     'templateEngine': '',
 
-    'defaultPage': '#',
     'pageTransitionSpeed': 0.25
   };
 
@@ -101,6 +101,30 @@ function Andraia(elementContainerId, userSettings) {
 
   // This is where we store laoded templates
   loadTemplate = function(id) {
+    var _elementId = getElementId(id),
+        deferred = $.Deferred();
+
+    if ($(_elementId).size() > 0) {
+      // Load the template into memory
+      _loadedTemplate = $(_elementId).html();
+
+      deferred.resolve();
+      return deferred;
+    }
+
+    // Example URL: templates/newView.html
+    $.get(settings.templateDirectory + _elementId.substr(1) + '.html', function(html) {
+      _loadedTemplate = html;
+      $('body').append('<script id="'+_elementId.substr(1)+'" type="text/html">'+html+'</script>');
+      deferred.resolve();
+    });
+
+    return deferred;
+  };
+
+
+  // This is where we store laoded templates
+  loadTemplate2 = function(id) {
     var _templateCache = self.templates,
         _elementId = getElementId(id),
         deferred = $.Deferred();
@@ -171,11 +195,11 @@ function Andraia(elementContainerId, userSettings) {
     // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function(){
       // Fetch the template for this view from memory
-      _template = self.templates[viewName];
+      // _template = self.templates[viewName];
       // Run the templating engine on the template using any user-defined data
-      _template = self.template(_template, self.templateData[viewName]);
+      _loadedTemplate = self.template(_loadedTemplate, self.templateData[viewName]);
       // Slide the page to this view
-      slider.slidePage($(_template), "left");
+      slider.slidePage($(_loadedTemplate), "left");
       // If there is a controller for this view, load it
       if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
         _controller = new self.controllers[viewName](self.helpers);
@@ -186,15 +210,21 @@ function Andraia(elementContainerId, userSettings) {
   // Shortcut to view specifically for loading a view
   this.loadView = function(viewName) {
     viewName = getElementId(viewName);
+
+    if (settings.enableRouter && !self.router.currentPage || self.router.currentPage !== viewName) {
+      window.location.hash = viewName;
+    }
+
+    if (settings.enablePageslider && !slider) {
+      slider = new PageSlider($(elementContainerId));
+    }
     // Load the template. When the template is loaded we will apply any 
     // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function(){
-      // Fetch the template for this view from memory
-      _template = self.templates[viewName];
       // Run the templating engine on the template using any user-defined data
-      _template = self.template(_template, self.templateData[viewName]);
+      _loadedTemplate = self.template(_loadedTemplate, self.templateData[viewName]);
       // Slide the page to this view
-      slider.slidePage($(_template), "left");
+      slider.slidePage($(_loadedTemplate), "left");
       // If there is a controller for this view, load it
       if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
         _controller = new self.controllers[viewName](self.helpers);
@@ -315,18 +345,28 @@ function Andraia(elementContainerId, userSettings) {
     currentPage: window.location.hash,
     changePage: function (pageId) {
       pageId = getElementId(pageId);
+
+      // If there is no current page we do not want to load the view until the app is ready.
+      if (!!self.router.currentPage) {
+        self.loadView(pageId);
+      }
+
+      if (!self.router.currentPage || self.router.currentPage === pageId) {
+        window.location.hash = pageId;
+      }
+
       self.router.currentPage = pageId;
-      self.view(pageId);
     }
   };
 
   if (settings.enableRouter) {
+    var pageHash = '';
+
     window.addEventListener('hashchange', function () {
-      var pageHash = window.location.hash,
-          changePage = self.router.changePage;
-      if (!pageHash) 
-        return changePage(settings.defaultPage);
-      changePage(pageHash);
+      var changePage = self.router.changePage;
+      pageHash = window.location.hash;
+      if (!!pageHash) 
+        changePage(pageHash);
     });
   }
 
@@ -341,13 +381,5 @@ function Andraia(elementContainerId, userSettings) {
       '    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
       '  }' +
       '</style>');
-  }
-
-  if (settings.enablePageslider) {
-    if (settings.enableRouter && self.router.currentPage.indexOf('#') === -1) {
-      window.location.hash = getElementId(settings.defaultPage);
-    }
-
-    slider = new PageSlider($(elementContainerId));
   }
 }

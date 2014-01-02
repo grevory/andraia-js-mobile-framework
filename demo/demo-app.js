@@ -29,6 +29,7 @@ app.injectHelper('add', function(a, b){
 });
 
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
+
 var loginCtrl = function(helper) {
   $('[name=email]').blur  (function(e){
     console.log($('[name=email]').val());
@@ -41,18 +42,15 @@ var loginData = {
   "format": "Game Sprite"
 };
 app.registerView('loginView', loginCtrl, loginData);
+
 app.registerView('andraiaView', function(){
   console.log('andraiaView');
 });
+
 app.registerView('thirdView', function(){
   console.log('thirdView');
 }, {
   'data': 'test'
 });
 
-// Sample router
-// window.addEventListener('hashchange', function () {
-//   if (window.location.hash === '#loginView') 
-//     return app.view('loginView');
-//   app.view('andraiaView');
-// });
+app.loadView('loginView');
