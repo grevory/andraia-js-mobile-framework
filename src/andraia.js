@@ -41,7 +41,6 @@ function Andraia(elementContainerId, userSettings) {
   this.controllers = {};
   this.models = {};
   this.helpers = {};
-  this.templates = {};
   this.templateData = {};
 
   
