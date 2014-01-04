@@ -7,8 +7,7 @@ A lightweight JS framework for building simple mobile HTML5 applications
 Install the module with: `npm install Andraia`
 
 ```javascript
-var Andraia = require('Andraia');
-Andraia.awesome(); // "awesome"
+var Andraia = require('Andraia')('game-cube', { enableRouter: false }); // Untested
 ```
 
 ### In the browser
@@ -17,24 +16,13 @@ Download the [production version][min] or the [development version][max].
 [min]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/dist/Andraia.min.js
 [max]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/dist/Andraia.js
 
-In your web page:
+In your web page you can attach Andraia's methods to any object.
 
 ```html
+<div id="game-cube"></div>
 <script src="dist/Andraia.min.js"></script>
 <script>
-awesome(); // "awesome"
-</script>
-```
-
-In your code, you can attach Andraia's methods to any object.
-
-```html
-<script>
-var exports = Bocoup.utils;
-</script>
-<script src="dist/Andraia.min.js"></script>
-<script>
-Bocoup.utils.awesome(); // "awesome"
+var myApp = new Andraia('game-cube');
 </script>
 ```
 
