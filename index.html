@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Andraia-js-mobile-framework : An ultra-lightweight javascript framework for building small mobile apps the way you like" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Andraia-js-mobile-framework</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/grevory/andraia-js-mobile-framework">View on GitHub</a>
+
+          <h1 id="project_title">Andraia-js-mobile-framework</h1>
+          <h2 id="project_tagline">An ultra-lightweight javascript framework for building small mobile apps the way you like</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/grevory/andraia-js-mobile-framework/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/grevory/andraia-js-mobile-framework/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="andraia" class="anchor" href="#andraia"><span class="octicon octicon-link"></span></a>Andraia</h1>
+
+<p>A lightweight JS framework for building simple mobile HTML5 applications</p>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<h3>
+<a name="on-the-server" class="anchor" href="#on-the-server"><span class="octicon octicon-link"></span></a>On the server</h3>
+
+<p>Install the module with: <code>npm install Andraia</code></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">Andraia</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'Andraia'</span><span class="p">);</span>
+<span class="nx">Andraia</span><span class="p">.</span><span class="nx">awesome</span><span class="p">();</span> <span class="c1">// "awesome"</span>
+</pre></div>
+
+<h3>
+<a name="in-the-browser" class="anchor" href="#in-the-browser"><span class="octicon octicon-link"></span></a>In the browser</h3>
+
+<p>Download the <a href="https://raw.github.com/grevory/andraia-js-mobile-framework/master/dist/Andraia.min.js">production version</a> or the <a href="https://raw.github.com/grevory/andraia-js-mobile-framework/master/dist/Andraia.js">development version</a>.</p>
+
+<p>In your web page:</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"dist/Andraia.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="nx">awesome</span><span class="p">();</span> <span class="c1">// "awesome"</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<p>In your code, you can attach Andraia's methods to any object.</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script&gt;</span>
+<span class="kd">var</span> <span class="nx">exports</span> <span class="o">=</span> <span class="nx">Bocoup</span><span class="p">.</span><span class="nx">utils</span><span class="p">;</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"dist/Andraia.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script&gt;</span>
+<span class="nx">Bocoup</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">awesome</span><span class="p">();</span> <span class="c1">// "awesome"</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<h2>
+<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<h2>
+<a name="loading-andraia" class="anchor" href="#loading-andraia"><span class="octicon octicon-link"></span></a>Loading Andraia</h2>
+
+<p>You need an element with an id attribute in order for Andraia to work. The element is where all the views will be loaded.</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"game-cube"</span><span class="nt">&gt;&lt;/div&gt;</span>
+</pre></div>
+
+<p>With that element in place (You can use whatever id you like), you can initiate the framework.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Andraia</span><span class="p">(</span><span class="s1">'game-cube'</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="models" class="anchor" href="#models"><span class="octicon octicon-link"></span></a>Models</h2>
+
+<p>Models are easy.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s1">'User'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="s1">'Enzo'</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="s1">'Matrix'</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">fullName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">' '</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">});</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"User's name"</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">fullName</span><span class="p">);</span>
+</pre></div>
+
+<p>As long as your model is a function and it returns something you can design it however you like.</p>
+
+<h2>
+<a name="views" class="anchor" href="#views"><span class="octicon octicon-link"></span></a>Views</h2>
+
+<p>You can load a view with a controller for each page of your app. </p>
+
+<p>The template can come from your HTML</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;script </span><span class="na">id=</span><span class="s">"loginView"</span> <span class="na">type=</span><span class="s">"text/html"</span><span class="nt">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">form</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"login-form"</span> <span class="nx">role</span><span class="o">=</span><span class="s2">"form"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"form-group"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">label</span><span class="o">&gt;</span><span class="nx">E</span><span class="o">-</span><span class="nx">mail</span><span class="o">&lt;</span><span class="err">/label&gt;</span>
+      <span class="o">&lt;</span><span class="nx">input</span> 
+        <span class="nx">type</span><span class="o">=</span><span class="s2">"text"</span>
+        <span class="nx">name</span><span class="o">=</span><span class="s2">"email"</span>
+        <span class="kr">class</span><span class="o">=</span><span class="s2">"form-control"</span>
+        <span class="nx">placeholder</span><span class="o">=</span><span class="s2">"E-mail"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">"form-group"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">label</span><span class="o">&gt;</span><span class="nx">Password</span><span class="o">&lt;</span><span class="err">/label&gt;</span>
+      <span class="o">&lt;</span><span class="nx">input</span>
+        <span class="nx">type</span><span class="o">=</span><span class="s2">"password"</span>
+        <span class="nx">name</span><span class="o">=</span><span class="s2">"password"</span>
+        <span class="kr">class</span><span class="o">=</span><span class="s2">"form-control"</span>
+        <span class="nx">placeholder</span><span class="o">=</span><span class="s2">"Password"</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="o">&lt;</span><span class="nx">button</span> 
+      <span class="nx">type</span><span class="o">=</span><span class="s2">"submit"</span> 
+      <span class="kr">class</span><span class="o">=</span><span class="s2">"btn btn-default"</span><span class="o">&gt;</span>
+      <span class="nx">Log</span> <span class="k">in</span>
+    <span class="o">&lt;</span><span class="err">/button&gt;</span>
+  <span class="o">&lt;</span><span class="err">/form&gt;</span>
+<span class="nt">&lt;/script&gt;</span>
+</pre></div>
+
+<p>The first parameter is the name of the ID of the HTML element.</p>
+
+<p>The second parameter is the controller function that will handle bindings and data.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">loginCtrl</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'[name=email]'</span><span class="p">).</span><span class="nx">focus</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">'[name=email]'</span><span class="p">).</span><span class="nx">val</span><span class="p">());</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="s1">'loginView'</span><span class="p">,</span> <span class="nx">loginCtrl</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="templating" class="anchor" href="#templating"><span class="octicon octicon-link"></span></a>Templating</h2>
+
+<p>You can actually use whatever you for templating.</p>
+
+<p>Let's say you want to use Underscore.JS.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">template</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">template</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Use Underscore's templating</span>
+  <span class="kd">var</span> <span class="nx">compiled</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="nx">template</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">compiled</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+
+<p>The template function takes two parameters always. The HTML as a string and data as an object.</p>
+
+<p>By adding the template function Andraia will automatically render the template substituing your template values. Using the example above</p>
+
+<p>In your HTML template</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"loginView"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;p&gt;</span>Welcome <span class="err">&lt;</span>%= format %&gt;<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">loginCtrl</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'[name=email]'</span><span class="p">).</span><span class="nx">focus</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">'[name=email]'</span><span class="p">).</span><span class="nx">val</span><span class="p">());</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+<span class="kd">var</span> <span class="nx">loginData</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">"format"</span><span class="o">:</span> <span class="s2">"Game Sprite"</span>
+<span class="p">};</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="s1">'loginView'</span><span class="p">,</span> <span class="nx">loginCtrl</span><span class="p">,</span> <span class="nx">loginData</span><span class="p">);</span>
+</pre></div>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p><em>(Coming soon)</em></p>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using <a href="http://gruntjs.com/">Grunt</a>.</p>
+
+<p><em>Also, please don't edit files in the "dist" subdirectory as they are generated via Grunt. You'll find source code in the "lib" subdirectory!</em></p>
+
+<h2>
+<a name="release-history" class="anchor" href="#release-history"><span class="octicon octicon-link"></span></a>Release History</h2>
+
+<p><em>(Nothing yet)</em></p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright (c) 2014 Gregory Pike<br>
+Licensed under the MIT license.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Andraia-js-mobile-framework maintained by <a href="https://github.com/grevory">grevory</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-40285920-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
