@@ -9,17 +9,29 @@
  * Licensed under the MIT license.
  */
 
+/* global $:false */
+/* global console:false */
+/* global window:false */
+/* global PageSlider:false */
+/* global _:false */
+/* global Handlebars:false */
+/* global Mustache:false */
+/* global EJS:false */
+/* global FastClick:false */
+
 function Andraia(elementContainerId, userSettings) {
 
   var self = this,
       defaultSettings = {},
       settings = {},
-      getElementId,
-      slider,
-      _templateEngine,
+      getElementId = null,
+      slider = null,
+      loadTemplate = null,
+      _templateEngine = null,
       _templateHeader = '',
       _templateFooter = '',
       _loadedTemplate = '',
+      _controller = null,
       error = null, 
       debugError = null;
 
@@ -122,41 +134,6 @@ function Andraia(elementContainerId, userSettings) {
   };
 
 
-  // This is where we store laoded templates
-  loadTemplate2 = function(id) {
-    var _templateCache = self.templates,
-        _elementId = getElementId(id),
-        deferred = $.Deferred();
-
-    if (_templateCache[id]) {
-      deferred.resolve();
-      return deferred;
-    }
-
-    if ($(_elementId).size() > 0) {
-      // Load the template into memory
-      _templateCache[id] = $(_elementId).html();
-      deferred.resolve();
-      return deferred;
-    }
-
-    // The html file should be based on the ID
-    var htmlFilename = id;
-
-    // The filename should not have a hash symbol
-    if (htmlFilename.indexOf('#') === 0) {
-      htmlFilename = htmlFilename.substr(1);
-    }
-
-    $.get(settings.templateDirectory + htmlFilename + '.html', function(html) {
-      _templateCache[id] = html;
-      deferred.resolve();
-    });
-
-    return deferred;
-  };
-
-
   this.registerView = function(viewName, controllerFunction, data) {
 
     viewName = getElementId(viewName);
@@ -176,7 +153,7 @@ function Andraia(elementContainerId, userSettings) {
   // The generic view method for loading views and storing controllers
   this.view = function(viewName, controllerFunction, data) {
 
-    var _template, _controller;
+    var _template;
 
     viewName = getElementId(viewName);
 
@@ -214,7 +191,7 @@ function Andraia(elementContainerId, userSettings) {
       window.location.hash = viewName;
     }
 
-    if (settings.enablePageslider && !slider) {
+    if (settings.enablePageslider && $.isFunction('PageSlider') && !slider) {
       slider = new PageSlider($(elementContainerId));
     }
     // Load the template. When the template is loaded we will apply any 
@@ -235,11 +212,15 @@ function Andraia(elementContainerId, userSettings) {
   // Define how the template is to be rendered. 
   _templateEngine = function(template, data) {
 
-    if (!data) return template;
+    if (!data) {
+      return template;
+    }
+
+    var compiled;
 
     function isEngine(engineType) {
       // Get the lowercase version of the template engine name (for consistency)
-      usersTemplateEngine = settings.templateEngine.toLowerCase();
+      var usersTemplateEngine = settings.templateEngine.toLowerCase();
       // Check for this engine type in the users selected template engine
       // E.g. search for "mustache in Mustache.js"
       return usersTemplateEngine.indexOf(engineType) >= 0;
@@ -247,13 +228,13 @@ function Andraia(elementContainerId, userSettings) {
 
     // Use Underscore's templating
     if (typeof _ !== "undefined" && $.isFunction(_) && isEngine('underscore')) {
-      var compiled = _.template(template);
+      compiled = _.template(template);
       return compiled(data);
     }
 
     // Use Handlebar's templating
     if (typeof Handlebars !== "undefined" && isEngine('handlebars')) {
-      var compiled = Handlebars.compile(template);
+      compiled = Handlebars.compile(template);
       template = compiled(data);
     }
 
@@ -267,7 +248,7 @@ function Andraia(elementContainerId, userSettings) {
     }
 
     return template;
-  }
+  };
 
 
   // A generic function for handling templates
@@ -330,12 +311,16 @@ function Andraia(elementContainerId, userSettings) {
   };
 
 
-  if (!elementContainerId) elementContainerId = 'body';
-  else elementContainerId = getElementId(elementContainerId);
+  if (!elementContainerId) {
+    elementContainerId = 'body';
+  }
+  else {
+    elementContainerId = getElementId(elementContainerId);
+  }
 
   if (settings.enableFastclick) {
     window.addEventListener('load', function () {
-      new FastClick(document.body);
+      new FastClick(window.document.body);
     }, false);
   }
 
@@ -364,12 +349,13 @@ function Andraia(elementContainerId, userSettings) {
     window.addEventListener('hashchange', function () {
       var changePage = self.router.changePage;
       pageHash = window.location.hash;
-      if (!!pageHash) 
+      if (!!pageHash) {
         changePage(pageHash);
+      }
     });
   }
 
-  if (settings.pageTransitionSpeed != defaultSettings.pageTransitionSpeed) {
+  if (settings.pageTransitionSpeed !== defaultSettings.pageTransitionSpeed) {
     // Add styles to overwrite the page transition speed at the end of the head
     // The default is 0.25. 
     // Don't bother with the overwrite if the user is using the default

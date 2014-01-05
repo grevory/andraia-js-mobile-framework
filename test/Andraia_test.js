@@ -1,6 +1,6 @@
 'use strict';
 
-var Andraia = require('../lib/Andraia.js');
+// var Andraia = require('../dev/Andraia.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -22,15 +22,15 @@ var Andraia = require('../lib/Andraia.js');
     test.ifError(value)
 */
 
-exports['awesome'] = {
-  setUp: function(done) {
-    // setup here
-    done();
-  },
-  'no args': function(test) {
-    test.expect(1);
-    // tests here
-    test.equal(Andraia.awesome(), 'awesome', 'should be awesome.');
-    test.done();
-  }
-};
+// exports['awesome'] = {
+//   setUp: function(done) {
+//     // setup here
+//     done();
+//   },
+//   'no args': function(test) {
+//     test.expect(1);
+//     // tests here
+//     test.equal(Andraia.awesome(), 'awesome', 'should be awesome.');
+//     test.done();
+//   }
+// };

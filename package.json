@@ -3,11 +3,7 @@
   "description": "A lightweight JS framework for building simple mobile HTML5 applications",
   "version": "0.1.0",
   "homepage": "https://github.com/grevory/andraia-js-mobile-framework",
-  "author": {
-    "name": "Gregory Pike",
-    "email": "greg@gregpike.ca",
-    "url": "http://gregpike.net"
-  },
+  "author": "Gregory Pike <greg@gregpike.ca> (http://gregpike.net)",
   "repository": {
     "type": "git",
     "url": "git://github.com/grevory/andraia-js-mobile-framework.git"
@@ -36,5 +32,10 @@
     "grunt-contrib-watch": "~0.4.0",
     "grunt": "~0.4.2"
   },
-  "keywords": []
+  "keywords": [],
+  "readmeFilename": "README.md",
+  "directories": {
+    "test": "test"
+  },
+  "license": "MIT"
 }

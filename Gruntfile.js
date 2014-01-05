@@ -18,8 +18,8 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['lib/<%= pkg.name %>.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['dev/<%= pkg.name %>.js', 'lib/*.js'],
+        dest: 'src/<%= pkg.name %>.js'
       },
     },
     uglify: {
@@ -28,12 +28,12 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'src/<%= pkg.name %>.min.js'
       },
     },
-    nodeunit: {
-      files: ['test/**/*_test.js']
-    },
+    // nodeunit: {
+    //   files: ['test/**/*_test.js']
+    // },
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -43,9 +43,9 @@ module.exports = function(grunt) {
       },
       lib: {
         options: {
-          jshintrc: 'lib/.jshintrc'
+          jshintrc: 'dev/.jshintrc'
         },
-        src: ['lib/**/*.js']
+        src: ['dev/**/*.js']
       },
       test: {
         src: ['test/**/*.js']
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
       },
       lib: {
         files: '<%= jshint.lib.src %>',
-        tasks: ['jshint:lib', 'nodeunit']
+        tasks: ['jshint:dev', 'nodeunit']
       },
       test: {
         files: '<%= jshint.test.src %>',
@@ -75,6 +75,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'nodeunit', 'concat', 'uglify']);
+  grunt.registerTask('default', [
+    'jshint', 
+    // 'nodeunit', 
+    'concat', 
+    'uglify'
+  ]);
 
 };
