@@ -1,6 +1,6 @@
 'use strict';
 
-// var Andraia = require('../dev/Andraia.js');
+var Andraia = require('../dev/Andraia.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -34,3 +34,16 @@
 //     test.done();
 //   }
 // };
+
+exports['models'] = {
+  setUp: function(done) {
+    Andraia.registerModel('');
+    done();
+  },
+  'no args': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(Andraia.awesome(), 'awesome', 'should be awesome.');
+    test.done();
+  }
+};

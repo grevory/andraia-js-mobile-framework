@@ -4,7 +4,7 @@ var app = new Andraia('game-cube', {
   'defaultPage': 'loginView'
 });
 
-app.createModel('User', function() {
+app.registerModel('User', function() {
   this.firstName = 'Enzo';
   this.lastName = 'Matrix';
   this.fullName = function() {
@@ -21,10 +21,10 @@ console.log(user.fullName());
 //   return compiled(data);
 // });
 
-app.injectTemplateHeader('#headerHtml');
-app.injectTemplateFooter('</div>');
+app.registerTemplateHeader('#headerHtml');
+app.registerTemplateFooter('</div>');
 
-app.injectHelper('add', function(a, b){
+app.registerHelper('add', function(a, b){
   return a + b;
 });
 

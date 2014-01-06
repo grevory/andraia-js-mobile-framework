@@ -94,7 +94,7 @@ function Andraia(elementContainerId, userSettings) {
 
   // Add a model to memory
   // Shortcut to model()
-  this.createModel = function(modelName, modelFunction) {
+  this.registerModel = function(modelName, modelFunction) {
     return self.model(modelName, modelFunction);
   };
 
@@ -105,7 +105,7 @@ function Andraia(elementContainerId, userSettings) {
 
 
   // Add helpers to memory for reusable functions
-  this.injectHelper = function(name, helperFunction) {
+  this.registerHelper = function(name, helperFunction) {
     self.helpers[name] = helperFunction;
   };
 
@@ -191,7 +191,7 @@ function Andraia(elementContainerId, userSettings) {
       window.location.hash = viewName;
     }
 
-    if (settings.enablePageslider && $.isFunction('PageSlider') && !slider) {
+    if (settings.enablePageslider && $.isFunction(PageSlider) && !slider) {
       slider = new PageSlider($(elementContainerId));
     }
     // Load the template. When the template is loaded we will apply any 
@@ -199,8 +199,14 @@ function Andraia(elementContainerId, userSettings) {
     loadTemplate(viewName).done(function(){
       // Run the templating engine on the template using any user-defined data
       _loadedTemplate = self.template(_loadedTemplate, self.templateData[viewName]);
+      
       // Slide the page to this view
-      slider.slidePage($(_loadedTemplate), "left");
+      if (!!slider) {
+        slider.slidePage($(_loadedTemplate), "left");
+      } else {
+        $(elementContainerId).html(_loadedTemplate);
+      }
+
       // If there is a controller for this view, load it
       if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
         _controller = new self.controllers[viewName](self.helpers);
@@ -278,7 +284,7 @@ function Andraia(elementContainerId, userSettings) {
 
   
   // A shortcut for adding templating to the app
-  this.injectTemplating = function(templateFunction) {
+  this.registerTemplating = function(templateFunction) {
     return self.template(templateFunction);
   };
 
@@ -301,12 +307,12 @@ function Andraia(elementContainerId, userSettings) {
   };
 
 
-  this.injectTemplateHeader = function(headerHtml) {
+  this.registerTemplateHeader = function(headerHtml) {
     _templateHeader = extractTemplate(headerHtml);
   };
 
 
-  this.injectTemplateFooter = function(footerHtml) {
+  this.registerTemplateFooter = function(footerHtml) {
     _templateFooter = extractTemplate(footerHtml);
   };
 
