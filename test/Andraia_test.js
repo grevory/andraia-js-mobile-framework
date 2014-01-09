@@ -1,49 +1,80 @@
-'use strict';
+(function($) {
+  /*
+    ======== A Handy Little QUnit Reference ========
+    http://api.qunitjs.com/
 
-var Andraia = require('../dev/Andraia.js');
+    Test methods:
+      module(name, {[setup][ ,teardown]})
+      test(name, callback)
+      expect(numberOfAssertions)
+      stop(increment)
+      start(decrement)
+    Test assertions:
+      ok(value, [message])
+      equal(actual, expected, [message])
+      notEqual(actual, expected, [message])
+      deepEqual(actual, expected, [message])
+      notDeepEqual(actual, expected, [message])
+      strictEqual(actual, expected, [message])
+      notStrictEqual(actual, expected, [message])
+      throws(block, [expected], [message])
+  */
 
-/*
-  ======== A Handy Little Nodeunit Reference ========
-  https://github.com/caolan/nodeunit
+  var testAndraia;
 
-  Test methods:
-    test.expect(numAssertions)
-    test.done()
-  Test assertions:
-    test.ok(value, [message])
-    test.equal(actual, expected, [message])
-    test.notEqual(actual, expected, [message])
-    test.deepEqual(actual, expected, [message])
-    test.notDeepEqual(actual, expected, [message])
-    test.strictEqual(actual, expected, [message])
-    test.notStrictEqual(actual, expected, [message])
-    test.throws(block, [error], [message])
-    test.doesNotThrow(block, [error], [message])
-    test.ifError(value)
-*/
+  module('jQuery#{%= js_safe_name %}', {
+    // This will run before each test in this module.
+    setup: function() {
+      this.elems = $('#qunit-fixture').children();
+      testAndraia = new Andraia('game-cube', {
+        'enableRouter': false
+      });
+    }
+  });
 
-// exports['awesome'] = {
-//   setUp: function(done) {
-//     // setup here
-//     done();
-//   },
-//   'no args': function(test) {
-//     test.expect(1);
-//     // tests here
-//     test.equal(Andraia.awesome(), 'awesome', 'should be awesome.');
-//     test.done();
-//   }
-// };
+  test('loads model', function() {
+    expect(1);
+    testAndraia.registerModel('testModel', function() {
+      
+      this.passesTest = true;
+      
+      this.shouldPassTest = function (booleanVal) {
+        return !!booleanVal;
+      };
+      
+      this.setTestToFail = function() {
+        this.passesTest = false;
+      };
+    });
 
-exports['models'] = {
-  setUp: function(done) {
-    Andraia.registerModel('');
-    done();
-  },
-  'no args': function(test) {
-    test.expect(1);
-    // tests here
-    test.equal(Andraia.awesome(), 'awesome', 'should be awesome.');
-    test.done();
-  }
-};
+    var testModel = testAndraia.loadModel('testModel');
+    strictEqual(!!testModel.passesTest, true, 'should pass test.');
+  });
+
+  // test('is awesome', function() {
+  //   expect(1);
+  //   strictEqual(this.elems.{%= js_safe_name %}().text(), 'awesome0awesome1awesome2', 'should be awesome');
+  // });
+
+  // module('jQuery.{%= js_safe_name %}');
+
+  // test('is awesome', function() {
+  //   expect(2);
+  //   strictEqual($.{%= js_safe_name %}(), 'awesome.', 'should be awesome');
+  //   strictEqual($.{%= js_safe_name %}({punctuation: '!'}), 'awesome!', 'should be thoroughly awesome');
+  // });
+
+  // module(':{%= js_safe_name %} selector', {
+  //   // This will run before each test in this module.
+  //   setup: function() {
+  //     this.elems = $('#qunit-fixture').children();
+  //   }
+  // });
+
+  // test('is awesome', function() {
+  //   expect(1);
+  //   // Use deepEqual & .get() when comparing jQuery objects.
+  //   deepEqual(this.elems.filter(':{%= js_safe_name %}').get(), this.elems.last().get(), 'knows awesome when it sees it');
+  // });
+
+}(jQuery));

@@ -31,9 +31,9 @@ module.exports = function(grunt) {
         dest: 'src/<%= pkg.name %>.min.js'
       },
     },
-    // nodeunit: {
-    //   files: ['test/**/*_test.js']
-    // },
+    qunit: {
+      files: ['test/*.html']
+    },
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -56,30 +56,32 @@ module.exports = function(grunt) {
         files: '<%= jshint.gruntfile.src %>',
         tasks: ['jshint:gruntfile']
       },
-      lib: {
-        files: '<%= jshint.lib.src %>',
-        tasks: ['jshint:dev', 'nodeunit']
+      src: {
+        files: '<%= jshint.src.src %>',
+        tasks: ['jshint:src', 'qunit']
       },
       test: {
         files: '<%= jshint.test.src %>',
-        tasks: ['jshint:test', 'nodeunit']
+        tasks: ['jshint:test', 'qunit']
       },
-    },
+    }
   });
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
+  grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
   grunt.registerTask('default', [
-    'jshint', 
+    // 'jshint', 
     // 'nodeunit', 
     'concat', 
     'uglify'
   ]);
+
+  grunt.registerTask('runTests', ['qunit']);
 
 };
