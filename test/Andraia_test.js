@@ -20,61 +20,46 @@
       throws(block, [expected], [message])
   */
 
-  var testAndraia;
+  var testAndraia = new Andraia('game-cube', {
+    'enableRouter': false
+  });
 
-  module('jQuery#{%= js_safe_name %}', {
+  module('Andraia', {
     // This will run before each test in this module.
     setup: function() {
       this.elems = $('#qunit-fixture').children();
-      testAndraia = new Andraia('game-cube', {
-        'enableRouter': false
+
+      // Register the model and add some properties / methods for testing later
+      testAndraia.registerModel('testModel', function() {
+        this.passesTest = true;
+        var localProperty = true;
+        
+        this.shouldPassTest = function (booleanVal) {
+          return !!booleanVal;
+        };
+        
+        this.setTestToFail = function() {
+          this.passesTest = false;
+        };
       });
     }
   });
 
   test('loads model', function() {
-    expect(1);
-    testAndraia.registerModel('testModel', function() {
-      
-      this.passesTest = true;
-      
-      this.shouldPassTest = function (booleanVal) {
-        return !!booleanVal;
-      };
-      
-      this.setTestToFail = function() {
-        this.passesTest = false;
-      };
-    });
+    expect(5);
 
     var testModel = testAndraia.loadModel('testModel');
-    strictEqual(!!testModel.passesTest, true, 'should pass test.');
+    // Check public property
+    strictEqual(!!testModel.passesTest, true, 'Public property shoud be accessible and have a true value.');
+    strictEqual(typeof testModel.localProperty, 'undefined', 'Should not have access to local properties within the model.');
+    
+    // Test shouldPassTest model method
+    strictEqual(!!testModel.shouldPassTest(true), true, 'Public method should return true with a truthy argument.');
+    strictEqual(!!testModel.shouldPassTest(), false, 'Public method should return false with a falsy argument, like nothing.');
+    
+    // Test altering model properties
+    testModel.setTestToFail();
+    strictEqual(!!testModel.passesTest, false, 'Public property should be false after manipulation.');
   });
-
-  // test('is awesome', function() {
-  //   expect(1);
-  //   strictEqual(this.elems.{%= js_safe_name %}().text(), 'awesome0awesome1awesome2', 'should be awesome');
-  // });
-
-  // module('jQuery.{%= js_safe_name %}');
-
-  // test('is awesome', function() {
-  //   expect(2);
-  //   strictEqual($.{%= js_safe_name %}(), 'awesome.', 'should be awesome');
-  //   strictEqual($.{%= js_safe_name %}({punctuation: '!'}), 'awesome!', 'should be thoroughly awesome');
-  // });
-
-  // module(':{%= js_safe_name %} selector', {
-  //   // This will run before each test in this module.
-  //   setup: function() {
-  //     this.elems = $('#qunit-fixture').children();
-  //   }
-  // });
-
-  // test('is awesome', function() {
-  //   expect(1);
-  //   // Use deepEqual & .get() when comparing jQuery objects.
-  //   deepEqual(this.elems.filter(':{%= js_safe_name %}').get(), this.elems.last().get(), 'knows awesome when it sees it');
-  // });
 
 }(jQuery));
