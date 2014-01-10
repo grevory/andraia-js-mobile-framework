@@ -3,24 +3,26 @@
 A lightweight JS framework for building simple mobile HTML5 applications
 
 ## Getting Started
-### On the server
+<!--### On the server
 Install the module with: `npm install Andraia`
 
 ```javascript
-var Andraia = require('Andraia')('game-cube', { enableRouter: false }); // Untested
+var Andraia = require('Andraia')('game-cube', { enableRouter: false }); // Does not work
 ```
 
-### In the browser
+### In the browser-->
 Download the [production version][min] or the [development version][max].
 
-[min]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/dist/Andraia.min.js
-[max]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/dist/Andraia.js
+[min]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/src/Andraia.min.js
+[max]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/src/Andraia.js
+
+The files you need to start working are in the src folder. It even includes the dependencies except for jQuery.
 
 In your web page you can attach Andraia's methods to any object.
 
 ```html
 <div id="game-cube"></div>
-<script src="dist/Andraia.min.js"></script>
+<script src="src/Andraia.min.js"></script>
 <script>
 var myApp = new Andraia('game-cube');
 </script>
@@ -49,14 +51,25 @@ Models
 Models are easy.
 
 ```javascript
-var user = app.model('User', function() {
-  this.firstName = 'Enzo';
-  this.lastName = 'Matrix';
-  this.fullName = function() {
+app.registerModel('User', function() {
+
+  // Initiate the model with some properties
+  var userAccess = {
+    "firstName": "Enzo",
+    "lastName": "Matrix"
+  };
+
+  userAccess.fullName = function() {
     return this.firstName + ' ' + this.lastName;
   };
+
+  // It is important you return an object with the properties and methods which are publically accessible.
+  return userAccess;
 });
-console.log("User's name", user.fullName);
+
+// To use the model, say in a controller (or anywhere)
+var user = app.loadModel('User');
+console.log("User's name:", user.fullName() );
 ```
 
 As long as your model is a function and it returns something you can design it however you like.
@@ -64,7 +77,7 @@ As long as your model is a function and it returns something you can design it h
 Views
 -----
 
-You can load a view with a controller for each page of your app. 
+You can load a view with a controller for each page of your app.
 
 The template can come from your HTML
 
@@ -73,7 +86,7 @@ The template can come from your HTML
   <form class="login-form" role="form">
     <div class="form-group">
       <label>E-mail</label>
-      <input 
+      <input
         type="text"
         name="email"
         class="form-control"
@@ -87,8 +100,8 @@ The template can come from your HTML
         class="form-control"
         placeholder="Password">
     </div>
-    <button 
-      type="submit" 
+    <button
+      type="submit"
       class="btn btn-default">
       Log in
     </button>
@@ -160,5 +173,5 @@ _Also, please don't edit files in the "dist" subdirectory as they are generated 
 _(Nothing yet)_
 
 ## License
-Copyright (c) 2014 Gregory Pike  
+Copyright (c) 2014 Gregory Pike
 Licensed under the MIT license.

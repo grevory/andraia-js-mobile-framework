@@ -5,15 +5,24 @@ var app = new Andraia('game-cube', {
 });
 
 app.registerModel('User', function() {
-  this.firstName = 'Enzo';
-  this.lastName = 'Matrix';
-  this.fullName = function() {
+
+  // Initiate the model with some properties
+  var userAccess = {
+    "firstName": "Enzo",
+    "lastName": "Matrix"
+  };
+
+  userAccess.fullName = function() {
     return this.firstName + ' ' + this.lastName;
   };
+
+  // It is important you return an object with the properties and methods which are publically accessible.
+  return userAccess;
 });
 
+// To use the model, say in a controller (or anywhere)
 var user = app.loadModel('User');
-console.log(user.fullName());
+console.log("User's name:", user.fullName() );
 
 // app.injectTemplating(function(template, data) {
 //   // Use Underscore's templating
