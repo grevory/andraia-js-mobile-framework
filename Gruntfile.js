@@ -48,7 +48,7 @@ module.exports = function(grunt) {
         src: ['dev/**/*.js']
       },
       test: {
-        src: ['test/**/*.js']
+        // src: ['test/**/*.js']
       },
     },
     watch: {
@@ -76,8 +76,8 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', [
-    // 'jshint', 
-    // 'nodeunit', 
+    'jshint', 
+    'qunit', 
     'concat', 
     'uglify'
   ]);

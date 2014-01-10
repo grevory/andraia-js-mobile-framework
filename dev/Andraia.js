@@ -103,6 +103,11 @@ function Andraia(elementContainerId, userSettings) {
     return self.model(modelName);
   };
 
+  // Check to see if a model is already loaded
+  this.hasModel = function(modelName) {
+    return !!self.models[modelName];
+  };
+
 
   // Add helpers to memory for reusable functions
   this.registerHelper = function(name, helperFunction) {

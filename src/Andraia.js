@@ -1,4 +1,4 @@
-/*! Andraia - v0.1.0 - 2014-01-08
+/*! Andraia - v0.1.0 - 2014-01-10
 * https://github.com/grevory/andraia-js-mobile-framework
 * Copyright (c) 2014 ; Licensed MIT */
 /* global $:false */
@@ -93,6 +93,11 @@ function Andraia(elementContainerId, userSettings) {
   // Grab the model for your app
   this.loadModel = function(modelName) {
     return self.model(modelName);
+  };
+
+  // Check to see if a model is already loaded
+  this.hasModel = function(modelName) {
+    return !!self.models[modelName];
   };
 
 

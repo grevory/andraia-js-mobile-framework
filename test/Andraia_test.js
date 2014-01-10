@@ -46,9 +46,14 @@
   });
 
   test('loads model', function() {
-    expect(5);
+    expect(6);
 
+    // Make sure the model is loaded
+    strictEqual(testAndraia.hasModel('testModel'), true, 'Model should be properly loaded into memory in the framework.');
+
+    // Load the model
     var testModel = testAndraia.loadModel('testModel');
+    
     // Check public property
     strictEqual(!!testModel.passesTest, true, 'Public property shoud be accessible and have a true value.');
     strictEqual(typeof testModel.localProperty, 'undefined', 'Should not have access to local properties within the model.');
