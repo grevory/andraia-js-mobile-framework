@@ -133,16 +133,24 @@ app.view('loginView', loginCtrl);
 Templating
 ----------
 
-You can actually use whatever you for templating.
-
-Let's say you want to use Underscore.JS.
+You can actually use whatever you for templating. In fact, Andraia supports basic templating for Underscore, Mustache, Handlebars, and EJS out of the box. To enable templating for on of the options above:
 
 ```javascript
-app.template = function(template, data) {
-  // Use Underscore's templating
-  var compiled = _.template(template);
-  return compiled(data);
-};
+var myApp = new Andraia('game-cube', {'enableUnderscore': true});
+```
+
+Let's say you wish to write your own function to compile your templates.
+
+```javascript
+myApp.registerTemplating(function(template, data){
+  var dataIndex;
+
+  for (dataIndex in data) {
+    template = template.replace(new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi'), data[dataIndex]);
+  }
+
+  return template;
+});
 ```
 
 The template function takes two parameters always. The HTML as a string and data as an object.
