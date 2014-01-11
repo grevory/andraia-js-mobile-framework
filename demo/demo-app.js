@@ -6,18 +6,21 @@ var app = new Andraia('game-cube', {
 
 app.registerModel('User', function() {
 
+  // To illustrate which elements within this function are private and which are public
+  // they have been named accordingly. These names are not required.
+  var _public = {},
+    _private = {};
+  
   // Initiate the model with some properties
-  var userAccess = {
-    "firstName": "Enzo",
-    "lastName": "Matrix"
-  };
+  _private.firstName = "Enzo";
+  _private.lastName = "Matrix";
 
-  userAccess.fullName = function() {
-    return this.firstName + ' ' + this.lastName;
+  _public.fullName = function() {
+    return _private.firstName + ' ' + _private.lastName;
   };
 
   // It is important you return an object with the properties and methods which are publically accessible.
-  return userAccess;
+  return _public;
 });
 
 // To use the model, say in a controller (or anywhere)

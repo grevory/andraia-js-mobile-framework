@@ -41,7 +41,7 @@ You need an element with an id attribute in order for Andraia to work. The eleme
 With that element in place (You can use whatever id you like), you can initiate the framework.
 
 ```javascript
-var app = new Andraia('game-cube');
+var myApp = new Andraia('game-cube');
 ```
 
 
@@ -51,24 +51,32 @@ Models
 Models are easy.
 
 ```javascript
-app.registerModel('User', function() {
+myApp.registerModel('User', function() {
 
+  // To illustrate which elements within this function are private and which are public
+  // they have been named accordingly. These names are not required.
+  var _public = {},
+    _private = {};
+  
   // Initiate the model with some properties
-  var userAccess = {
-    "firstName": "Enzo",
-    "lastName": "Matrix"
-  };
+  _private.firstName = "Enzo";
+  _private.lastName = "Matrix";
 
-  userAccess.fullName = function() {
-    return this.firstName + ' ' + this.lastName;
+  _public.fullName = function() {
+    return _private.firstName + ' ' + _private.lastName;
   };
 
   // It is important you return an object with the properties and methods which are publically accessible.
-  return userAccess;
+  return _public;
 });
+```
 
-// To use the model, say in a controller (or anywhere)
-var user = app.loadModel('User');
+A model is essentially a javascript function. It can contain public and private properties. As long as it is returned in an object, it is accessible where that model is loaded.
+
+To load a model:
+
+```javascript
+var user = myApp.loadModel('User');
 console.log("User's name:", user.fullName() );
 ```
 

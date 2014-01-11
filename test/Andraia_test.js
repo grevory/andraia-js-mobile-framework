@@ -53,7 +53,7 @@
 
     // Load the model
     var testModel = testAndraia.loadModel('testModel');
-    
+
     // Check public property
     strictEqual(!!testModel.passesTest, true, 'Public property shoud be accessible and have a true value.');
     strictEqual(typeof testModel.localProperty, 'undefined', 'Should not have access to local properties within the model.');
