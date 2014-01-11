@@ -62,17 +62,17 @@
     expect(6);
 
     // Make sure the model is loaded
-    strictEqual(testAndraia.hasModel('testModel'), true, 'Model should be properly loaded into memory in the framework.');
+    ok(testAndraia.hasModel('testModel'), 'Model should be properly loaded into memory in the framework.');
 
     // Load the model
     var testModel = testAndraia.loadModel('testModel');
 
     // Check public property
-    strictEqual(!!testModel.passesTest, true, 'Public property shoud be accessible and have a true value.');
+    ok(testModel.passesTest, 'Public property shoud be accessible and have a true value.');
     strictEqual(typeof testModel.localProperty, 'undefined', 'Should not have access to local properties within the model.');
     
     // Test shouldPassTest model method
-    strictEqual(!!testModel.shouldPassTest(true), true, 'Public method should return true with a truthy argument.');
+    ok(!!testModel.shouldPassTest(true), 'Public method should return true with a truthy argument.');
     strictEqual(!!testModel.shouldPassTest(), false, 'Public method should return false with a falsy argument, like nothing.');
     
     // Test altering model properties
