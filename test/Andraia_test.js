@@ -42,9 +42,22 @@
           this.passesTest = false;
         };
       });
+
+      // Register a simple home-made template compiler
+      testAndraia.registerTemplating(function(template, data){
+        var dataIndex;
+
+        for (dataIndex in data) {
+          template = template.replace(new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi'), data[dataIndex]);
+        }
+
+        return template;
+      });
     }
   });
 
+
+  // MODELS
   test('loads model', function() {
     expect(6);
 
@@ -65,6 +78,21 @@
     // Test altering model properties
     testModel.setTestToFail();
     strictEqual(!!testModel.passesTest, false, 'Public property should be false after manipulation.');
+  });
+
+
+  // TEMPLATES
+  test('loads template', function(){
+    expect(1);
+    
+    // Grab the test template from the HTML
+    var template = $('#test-template').html();
+    // Compile the test template using the template defined in the setup
+    template = testAndraia.template(template, {'item': 'butterknife'});
+    // Display the compiled template in the game cube (main container)
+    $('#game-cube').html(template);
+
+    strictEqual(template, '<div><p>Prepare to taste the wrath of my... butterknife?</p></div>', 'Template chould compile {{item}} into butterknife');
   });
 
 }(jQuery));

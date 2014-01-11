@@ -82,6 +82,6 @@ module.exports = function(grunt) {
     'uglify'
   ]);
 
-  grunt.registerTask('runTests', ['qunit']);
+  grunt.registerTask('test', ['qunit']);
 
 };
