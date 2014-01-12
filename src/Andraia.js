@@ -1,4 +1,4 @@
-/*! Andraia - v0.1.0 - 2014-01-11
+/*! Andraia - v0.1.0 - 2014-01-12
 * https://github.com/grevory/andraia-js-mobile-framework
 * Copyright (c) 2014 ; Licensed MIT */
 /* global $:false */

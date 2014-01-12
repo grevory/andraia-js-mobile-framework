@@ -53,8 +53,9 @@ Models are easy.
 ```javascript
 myApp.registerModel('User', function() {
 
-  // To illustrate which elements within this function are private and which are public
-  // they have been named accordingly. These names are not required.
+  // To illustrate which elements within this function are private 
+  // and which are public they have been named accordingly. These 
+  // names are not required.
   var _public = {},
     _private = {};
   
@@ -66,7 +67,8 @@ myApp.registerModel('User', function() {
     return _private.firstName + ' ' + _private.lastName;
   };
 
-  // It is important you return an object with the properties and methods which are publically accessible.
+  // It is important you return an object with the properties and 
+  // methods which are publically accessible.
   return _public;
 });
 ```
