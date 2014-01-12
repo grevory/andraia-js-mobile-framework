@@ -82,6 +82,11 @@ module.exports = function(grunt) {
     'uglify'
   ]);
 
+  grunt.registerTask('minify', [
+    'concat', 
+    'uglify'
+  ]);
+
   grunt.registerTask('test', ['qunit']);
 
 };
