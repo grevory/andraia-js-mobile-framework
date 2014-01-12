@@ -129,6 +129,15 @@
         "character": "Captain Capacitor",
         "quote": "Shiver me templates!"
       });
+
+      testAndraia.registerHelper('add', function(a, b){
+        return a + b;
+      });
+
+      // Register a view with a helper in the controller
+      testAndraia.registerView('test-view3', function(helper) {
+        $('#game-cube p').append(helper.add(1, 2));
+      });
     }
   });
 
@@ -142,6 +151,13 @@
     expect(1);
     testAndraia.loadView('test-view2');
     strictEqual($(testContainerId).html(), '<div><p>Captain Capacitor: "Shiver me templates!"</p><p>Cecil: "Tea? Earl Grey? Hot? What in the net is that?"</p></div>', 'The app view should contain compiled markup from the view plus markup added from within the controller.');
+  });
+
+  test('Does the loaded view use helpers', function(){
+    expect(1);
+    testAndraia.loadView('test-view3');
+    console.log('TEMPLATE3:',$(testContainerId).html());
+    strictEqual($(testContainerId).html(), '<div><p>1 + 2 = 3</p></div>', 'The app helper should execute and update the view.');
   });
 
 }(jQuery));
