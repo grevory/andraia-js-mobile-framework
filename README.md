@@ -16,7 +16,7 @@ Download the [production version][min] or the [development version][max].
 [min]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/src/Andraia.min.js
 [max]: https://raw.github.com/grevory/andraia-js-mobile-framework/master/src/Andraia.js
 
-The files you need to start working are in the src folder. It even includes the dependencies except for jQuery.
+The files you need to start working are in the [src](https://github.com/grevory/andraia-js-mobile-framework/tree/master/src) folder. It even includes the dependencies except for jQuery.
 
 In your web page you can attach Andraia's methods to any object.
 
@@ -180,7 +180,7 @@ _(Coming soon)_
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
-_Also, please don't edit files in the "dist" subdirectory as they are generated via Grunt. You'll find source code in the "lib" subdirectory!_
+_Also, please don't edit files in the "[src](https://github.com/grevory/andraia-js-mobile-framework/tree/master/src)" subdirectory as they are generated via Grunt. You'll find source code in the "[dev](https://github.com/grevory/andraia-js-mobile-framework/tree/master/dev)" subdirectory!_
 
 ## Release History
 _(Nothing yet)_
