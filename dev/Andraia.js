@@ -199,6 +199,7 @@ function Andraia(elementContainerId, userSettings) {
     if (settings.enablePageslider && $.isFunction(PageSlider) && !slider) {
       slider = new PageSlider($(elementContainerId));
     }
+
     // Load the template. When the template is loaded we will apply any 
     // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function(){

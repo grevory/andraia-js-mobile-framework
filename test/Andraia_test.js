@@ -20,8 +20,11 @@
       throws(block, [expected], [message])
   */
 
-  var testAndraia = new Andraia('game-cube', {
-    'enableRouter': false
+  var testContainerId = '#game-cube';
+
+  var testAndraia = new Andraia(testContainerId, {
+    'enableRouter': false,
+    'enablePageslider': false
   });
 
 
@@ -100,9 +103,31 @@
     // Compile the test template using the template defined in the setup
     template = testAndraia.template(template, {'item': 'butterknife'});
     // Display the compiled template in the game cube (main container)
-    $('#game-cube').html(template);
+    $(testContainerId).html(template);
 
-    strictEqual(template, '<div><p>Prepare to taste the wrath of my... butterknife?</p></div>', 'Template chould compile {{item}} into butterknife');
+    strictEqual(template, '<div><p>"Prepare to taste the wrath of my... butterknife?"</p></div>', 'Template chould compile {{item}} into butterknife');
+  });
+
+  // VIEWS ------------------------------------------------------------/
+  module('Andraia Views', {
+    // This will run before each test in this module.
+    setup: function() {
+      this.elems = $('#qunit-fixture').children();
+
+      // Reset the game cube (which is just a fancy ID on our app container element)
+      $('#game-cube').html('');
+
+      // Register a simple home-made template compiler
+      testAndraia.registerView('test-view', function() {
+        $('#game-cube p').last().after('<p>"Free for only $99,99,99!"</p>');
+      });
+    }
+  });
+
+  test('Does the loaded view properly render', function(){
+    expect(1);
+    testAndraia.loadView('test-view');
+    strictEqual($(testContainerId).html(), '<div><h1>Mike the TV</h1><p>"Bucket-o-nothing"</p><p>"Free for only $99,99,99!"</p></div>', 'The app view should contain markup from the view plus markup added from within the controller.');
   });
 
 }(jQuery));
