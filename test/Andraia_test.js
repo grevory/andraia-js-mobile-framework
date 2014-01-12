@@ -24,7 +24,9 @@
     'enableRouter': false
   });
 
-  module('Andraia', {
+
+  // MODELS --------------------------------------------------------------/
+  module('Andraia Models', {
     // This will run before each test in this module.
     setup: function() {
       this.elems = $('#qunit-fixture').children();
@@ -42,27 +44,17 @@
           this.passesTest = false;
         };
       });
-
-      // Register a simple home-made template compiler
-      testAndraia.registerTemplating(function(template, data){
-        var dataIndex;
-
-        for (dataIndex in data) {
-          template = template.replace(new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi'), data[dataIndex]);
-        }
-
-        return template;
-      });
     }
   });
 
-
-  // MODELS
-  test('loads model', function() {
-    expect(6);
-
+  test('Check that model was properly registered', function() {
+    expect(1);
     // Make sure the model is loaded
     ok(testAndraia.hasModel('testModel'), 'Model should be properly loaded into memory in the framework.');
+  });
+
+  test('Check model properties and methods', function() {
+    expect(5);
 
     // Load the model
     var testModel = testAndraia.loadModel('testModel');
@@ -81,8 +73,26 @@
   });
 
 
-  // TEMPLATES
-  test('loads template', function(){
+  // TEMPLATES ------------------------------------------------------------/
+  module('Andraia Templates', {
+    // This will run before each test in this module.
+    setup: function() {
+      this.elems = $('#qunit-fixture').children();
+
+      // Register a simple home-made template compiler
+      testAndraia.registerTemplating(function(template, data){
+        var dataIndex;
+
+        for (dataIndex in data) {
+          template = template.replace(new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi'), data[dataIndex]);
+        }
+
+        return template;
+      });
+    }
+  });
+
+  test('Check that the custom template method compiles data properly into the template markup', function(){
     expect(1);
     
     // Grab the test template from the HTML
