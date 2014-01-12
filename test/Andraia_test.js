@@ -117,17 +117,31 @@
       // Reset the game cube (which is just a fancy ID on our app container element)
       $('#game-cube').html('');
 
-      // Register a simple home-made template compiler
-      testAndraia.registerView('test-view', function() {
+      // Register a simple view with no data
+      testAndraia.registerView('test-view1', function() {
         $('#game-cube p').last().after('<p>"Free for only $99,99,99!"</p>');
+      });
+
+      // Register a view with data to compile
+      testAndraia.registerView('test-view2', function() {
+        $('#game-cube p').last().after('<p>Cecil: "Tea? Earl Grey? Hot? What in the net is that?"</p>');
+      }, {
+        "character": "Captain Capacitor",
+        "quote": "Shiver me templates!"
       });
     }
   });
 
   test('Does the loaded view properly render', function(){
     expect(1);
-    testAndraia.loadView('test-view');
+    testAndraia.loadView('test-view1');
     strictEqual($(testContainerId).html(), '<div><h1>Mike the TV</h1><p>"Bucket-o-nothing"</p><p>"Free for only $99,99,99!"</p></div>', 'The app view should contain markup from the view plus markup added from within the controller.');
+  });
+
+  test('Does the loaded view properly render and compile data', function(){
+    expect(1);
+    testAndraia.loadView('test-view2');
+    strictEqual($(testContainerId).html(), '<div><p>Captain Capacitor: "Shiver me templates!"</p><p>Cecil: "Tea? Earl Grey? Hot? What in the net is that?"</p></div>', 'The app view should contain compiled markup from the view plus markup added from within the controller.');
   });
 
 }(jQuery));
