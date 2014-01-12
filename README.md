@@ -91,26 +91,20 @@ The template can come from your HTML
 
 ```html
 <script id="loginView" type="text/html">
-  <form class="login-form" role="form">
-    <div class="form-group">
+  <form>
+    <div>
       <label>E-mail</label>
       <input
         type="text"
-        name="email"
-        class="form-control"
-        placeholder="E-mail">
+        name="email">
     </div>
-    <div class="form-group">
+    <div>
       <label>Password</label>
       <input
         type="password"
-        name="password"
-        class="form-control"
-        placeholder="Password">
+        name="password">
     </div>
-    <button
-      type="submit"
-      class="btn btn-default">
+    <button type="submit">
       Log in
     </button>
   </form>
@@ -123,7 +117,7 @@ The second parameter is the controller function that will handle bindings and da
 
 ```javascript
 var loginCtrl = function() {
-  $('[name=email]').focus(function(e){
+  $('[name=email]').blur(function(e){
     console.log($('[name=email]').val());
   });
 };
@@ -143,10 +137,11 @@ Let's say you wish to write your own function to compile your templates.
 
 ```javascript
 myApp.registerTemplating(function(template, data){
-  var dataIndex;
+  var dataIndex, regexPattern;
 
   for (dataIndex in data) {
-    template = template.replace(new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi'), data[dataIndex]);
+    regexPattern = new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi');
+    template = template.replace(regexPattern, data[dataIndex]);
   }
 
   return template;

@@ -27,11 +27,16 @@ app.registerModel('User', function() {
 var user = app.loadModel('User');
 console.log("User's name:", user.fullName() );
 
-// app.injectTemplating(function(template, data) {
-//   // Use Underscore's templating
-//   var compiled = _.template(template);
-//   return compiled(data);
-// });
+app.registerTemplating(function(template, data){
+  var dataIndex, regexPattern;
+
+  for (dataIndex in data) {
+    regexPattern = new RegExp('{{\\s*' + dataIndex + '\\s*}}', 'gi');
+    template = template.replace(regexPattern, data[dataIndex]);
+  }
+
+  return template;
+});
 
 app.registerTemplateHeader('#headerHtml');
 app.registerTemplateFooter('</div>');
