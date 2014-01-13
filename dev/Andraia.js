@@ -109,6 +109,14 @@ function Andraia(elementContainerId, userSettings) {
 
   // Add helpers to memory for reusable functions
   this.registerHelper = function(name, helperFunction) {
+    if ($.type(name) !== "string") {
+      return self.error('Could not register helper. The name is not a string.');
+    }
+
+    if ($.type(helperFunction) !== "function") {
+      return self.error('Could not register helper. The function is not a function.');
+    }
+
     self.helpers[name] = helperFunction;
   };
 
