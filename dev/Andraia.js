@@ -3,8 +3,6 @@
  * A lightweight javascript MVC framework for building simple mobile apps.
  * https://github.com/grevory/andraia-js-mobile-framework
  *
- * Version 0.1.0
- *
  * Copyright (c) 2014 Gregory Pike
  * Licensed under the MIT license.
  */
