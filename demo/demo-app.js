@@ -68,7 +68,12 @@ var loginCtrl = function(helper) {
 
   var sum = helper.add(1,2);
   console.log(sum);
+
+  return {
+    'format': 'Guardian'
+  };
 };
+
 var loginData = {
   "format": "Game Sprite"
 };

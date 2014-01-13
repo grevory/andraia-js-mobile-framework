@@ -29,6 +29,7 @@ function Andraia(elementContainerId, userSettings) {
       _templateHeader = '',
       _templateFooter = '',
       _loadedTemplate = '',
+      _data = null;
       _controller = null,
       error = null, 
       debugError = null;
@@ -161,6 +162,21 @@ function Andraia(elementContainerId, userSettings) {
   };
 
 
+  function loadController(viewName) {
+    // Check to see if there is a controller for this view and then load it
+    if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
+      _controller = new self.controllers[viewName](self.helpers);
+    }
+
+    // If there is a data returned from the controller we assume it is meant to be used for template
+    if (!$.isEmptyObject(_controller)) {
+      return _controller;
+    }
+    // There was no data from the controller but their might be data registered for this view
+    return self.templateData[viewName];
+  }
+
+
   // The generic view method for loading views and storing controllers
   this.view = function(viewName, controllerFunction, data) {
 
@@ -181,16 +197,13 @@ function Andraia(elementContainerId, userSettings) {
     // Load the template. When the template is loaded we will apply any 
     // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function(){
-      // Fetch the template for this view from memory
-      // _template = self.templates[viewName];
+      // If there is a controller for this view, load it
+      _data = loadController(viewName);
+
       // Run the templating engine on the template using any user-defined data
-      _loadedTemplate = self.template(_loadedTemplate, self.templateData[viewName]);
+      _loadedTemplate = self.template(_loadedTemplate, _data);
       // Slide the page to this view
       slider.slidePage($(_loadedTemplate), "left");
-      // If there is a controller for this view, load it
-      if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
-        _controller = new self.controllers[viewName](self.helpers);
-      }
     });
   };
 
@@ -208,20 +221,19 @@ function Andraia(elementContainerId, userSettings) {
 
     // Load the template. When the template is loaded we will apply any 
     // templating as necessary and load the controller for the view
-    loadTemplate(viewName).done(function(){
+    loadTemplate(viewName).done(function() {
+      
+      // If there is a controller for this view, load it
+      _data = loadController(viewName);
+
       // Run the templating engine on the template using any user-defined data
-      _loadedTemplate = self.template(_loadedTemplate, self.templateData[viewName]);
+      _loadedTemplate = self.template(_loadedTemplate, _data);
       
       // Slide the page to this view
       if (!!slider) {
         slider.slidePage($(_loadedTemplate), "left");
       } else {
         $(elementContainerId).html(_loadedTemplate);
-      }
-
-      // If there is a controller for this view, load it
-      if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
-        _controller = new self.controllers[viewName](self.helpers);
       }
     });
   };
