@@ -1,4 +1,4 @@
-/*! Andraia - v0.1.0 - 2014-01-12
+/*! Andraia - v0.1.0 - 2014-01-13
 * https://github.com/grevory/andraia-js-mobile-framework
 * Copyright (c) 2014 ; Licensed MIT */
 /* global $:false */
@@ -79,7 +79,7 @@ function Andraia(elementContainerId, userSettings) {
     }
 
     if (!modelFunction && $.isFunction(self.models[modelName])) {
-      modelLoaded = new self.models[modelName]();
+      modelLoaded = new self.models[modelName](self.helpers);
       return modelLoaded;
     }
   };

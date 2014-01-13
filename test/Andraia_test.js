@@ -34,8 +34,12 @@
     setup: function() {
       this.elems = $('#qunit-fixture').children();
 
+      testAndraia.registerHelper('square', function(num) {
+        return num * num;
+      });
+
       // Register the model and add some properties / methods for testing later
-      testAndraia.registerModel('testModel', function() {
+      testAndraia.registerModel('testModel', function(helper) {
         this.passesTest = true;
         var localProperty = true;
         
@@ -45,6 +49,10 @@
         
         this.setTestToFail = function() {
           this.passesTest = false;
+        };
+
+        this.getSquare = function(num) {
+          return helper.square(num);
         };
       });
     }
@@ -73,6 +81,13 @@
     // Test altering model properties
     testModel.setTestToFail();
     strictEqual(!!testModel.passesTest, false, 'Public property should be false after manipulation.');
+  });
+
+  // Test model helpers
+  test('Check that models can use helpers properly', function() {
+    expect(1);
+    var testModel = testAndraia.loadModel('testModel');
+    strictEqual(testModel.getSquare(2), 4, 'Should square 2 and equal 4');
   });
 
 
@@ -156,7 +171,6 @@
   test('Does the loaded view use helpers', function(){
     expect(1);
     testAndraia.loadView('test-view3');
-    console.log('TEMPLATE3:',$(testContainerId).html());
     strictEqual($(testContainerId).html(), '<div><p>1 + 2 = 3</p></div>', 'The app helper should execute and update the view.');
   });
 
