@@ -87,7 +87,7 @@ function Andraia(elementContainerId, userSettings) {
     }
 
     if (!modelFunction && $.isFunction(self.models[modelName])) {
-      modelLoaded = new self.models[modelName]();
+      modelLoaded = new self.models[modelName](self.helpers);
       return modelLoaded;
     }
   };

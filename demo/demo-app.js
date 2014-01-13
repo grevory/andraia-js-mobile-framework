@@ -4,7 +4,16 @@ var app = new Andraia('game-cube', {
   'defaultPage': 'loginView'
 });
 
-app.registerModel('User', function() {
+app.registerHelper('calculateAge', function(name){
+  var ages = {
+    'Enzo Matrix': 14,
+    'Bob': 24
+  };
+
+  return ages[name];
+});
+
+app.registerModel('User', function(helper) {
 
   // To illustrate which elements within this function are private and which are public
   // they have been named accordingly. These names are not required.
@@ -19,6 +28,10 @@ app.registerModel('User', function() {
     return _private.firstName + ' ' + _private.lastName;
   };
 
+  _public.age = function() {
+    return helper.calculateAge(_public.fullName());
+  };
+
   // It is important you return an object with the properties and methods which are publically accessible.
   return _public;
 });
@@ -26,6 +39,7 @@ app.registerModel('User', function() {
 // To use the model, say in a controller (or anywhere)
 var user = app.loadModel('User');
 console.log("User's name:", user.fullName() );
+console.log("User's age:", user.age() + ' seconds old');
 
 app.registerTemplating(function(template, data){
   var dataIndex, regexPattern;
