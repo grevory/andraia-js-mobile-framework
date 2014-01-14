@@ -62,8 +62,12 @@ app.registerHelper('add', function(a, b){
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
 
 var loginCtrl = function(helper) {
-  $('[name=email]').blur  (function(e){
-    console.log($('[name=email]').val());
+  app.bind('[name=email]', 'blur', function(){
+    console.log($(this).val());
+  });
+
+  app.bind('[name=password]', 'focus', function(){
+    console.log('Don\'t let anyone see!');
   });
 
   var sum = helper.add(1,2);

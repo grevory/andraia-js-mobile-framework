@@ -31,6 +31,7 @@ function Andraia(elementContainerId, userSettings) {
       _loadedTemplate = '',
       _data = null;
       _controller = null,
+      _bindings = {},
       error = null, 
       debugError = null;
 
@@ -177,6 +178,19 @@ function Andraia(elementContainerId, userSettings) {
   }
 
 
+  this.bind = function(selector, bindType, callbackFtn) {
+    if (!_bindings[self.router.currentPage]) {
+      _bindings[self.router.currentPage] = {};
+    }
+
+    _bindings[self.router.currentPage][selector + '-' + bindType] = {
+      'selector': selector,
+      'bindType': bindType,
+      'callbackFtn': callbackFtn
+    }
+  };
+
+
   // The generic view method for loading views and storing controllers
   this.view = function(viewName, controllerFunction, data) {
 
@@ -204,6 +218,11 @@ function Andraia(elementContainerId, userSettings) {
       _loadedTemplate = self.template(_loadedTemplate, _data);
       // Slide the page to this view
       slider.slidePage($(_loadedTemplate), "left");
+      if (_bindings[viewName]){
+        $.each(_bindings[viewName], function(i,v) {
+          console(i,v);
+        })
+      }
     });
   };
 
@@ -234,6 +253,13 @@ function Andraia(elementContainerId, userSettings) {
         slider.slidePage($(_loadedTemplate), "left");
       } else {
         $(elementContainerId).html(_loadedTemplate);
+      }
+
+      if (_bindings[viewName]) {
+        $.each(_bindings[viewName], function(id, binding) {
+          $(binding.selector).unbind(binding.bindType + '.' + viewName);
+          $(binding.selector).bind(binding.bindType + '.' + viewName, binding.callbackFtn);
+        })
       }
     });
   };
