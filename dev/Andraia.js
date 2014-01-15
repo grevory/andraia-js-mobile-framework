@@ -31,7 +31,7 @@ function Andraia(elementContainerId, userSettings) {
       _loadedTemplate = '',
       _data = null;
       _controller = null,
-      _bindings = {},
+      _bindings = [],
       error = null, 
       debugError = null;
 
@@ -179,16 +179,16 @@ function Andraia(elementContainerId, userSettings) {
 
 
   this.bind = function(selector, bindType, callbackFtn) {
-    if (!_bindings[self.router.currentPage]) {
-      _bindings[self.router.currentPage] = {};
-    }
-
-    _bindings[self.router.currentPage][selector + '-' + bindType] = {
+    _bindings.push({
       'selector': selector,
       'bindType': bindType,
       'callbackFtn': callbackFtn
-    }
+    });
   };
+
+  function resetBindings() {
+    this.bindings = [];
+  }
 
 
   // The generic view method for loading views and storing controllers
@@ -242,6 +242,7 @@ function Andraia(elementContainerId, userSettings) {
     // templating as necessary and load the controller for the view
     loadTemplate(viewName).done(function() {
       
+      resetBindings();
       // If there is a controller for this view, load it
       _data = loadController(viewName);
 
@@ -255,12 +256,10 @@ function Andraia(elementContainerId, userSettings) {
         $(elementContainerId).html(_loadedTemplate);
       }
 
-      if (_bindings[viewName]) {
-        $.each(_bindings[viewName], function(id, binding) {
-          $(binding.selector).unbind(binding.bindType + '.' + viewName);
-          $(binding.selector).bind(binding.bindType + '.' + viewName, binding.callbackFtn);
-        })
-      }
+      $.each(_bindings, function(id, binding) {
+        $(binding.selector).unbind(binding.bindType + '.' + viewName);
+        $(binding.selector).bind(binding.bindType + '.' + viewName, binding.callbackFtn);
+      });
     });
   };
 

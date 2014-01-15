@@ -73,8 +73,9 @@ var loginCtrl = function(helper) {
   var sum = helper.add(1,2);
   console.log(sum);
 
+  // Overwrite the data passed in as the view was registered
   return {
-    'format': 'Guardian'
+    'format': 'Virus'
   };
 };
 
