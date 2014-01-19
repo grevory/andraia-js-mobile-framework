@@ -13,23 +13,25 @@
 
 function Andraia(elementContainerId, userSettings) {
 
-  var self = this,
-      defaultSettings = {},
-      settings = {},
-      getElementId = null,
-      slider = null,
-      loadTemplate = null,
-      _templateEngine = null,
-      _templateHeader = '',
-      _templateFooter = '',
-      _loadedTemplate = '',
-      _data = null,
-      _controller = null,
-      _bindings = [],
-      error = null,
-      debugError = null;
+  // Variables prefixed with underscores (_) are used throughout the app
+  // but are not accessible outside of Andraia
+  var _self = this,
+      // Settings vars
+      _defaultSettings = {}, _settings = {},
+      // The ID value of the element container
+      _getElementId = null,
+      // The PageSlide var
+      _slider = null,
+      // Loading templates
+      _loadTemplate = null, _loadedTemplate = '',
+      // Templating vars
+      _templateEngine = null, _templateHeader = '', _templateFooter = '',
+      // Data and controller vars
+      _data = null, _controller = null, _bindings = [],
+      // Error vars
+      _error = null, _debugError = null;
 
-  defaultSettings = {
+  _defaultSettings = {
     'templateDirectory': 'templates/',
     
     'enablePageslider': true,
@@ -41,7 +43,7 @@ function Andraia(elementContainerId, userSettings) {
     'pageTransitionSpeed': 0.25
   };
 
-  $.extend(settings, defaultSettings, userSettings);
+  $.extend(_settings, _defaultSettings, userSettings);
 
   // Data in memory
   this.controllers = {};
@@ -51,22 +53,22 @@ function Andraia(elementContainerId, userSettings) {
 
   
   // Adds a hash to an element ID if it is not there for jQuery selectors
-  getElementId = function(id) {
+  _getElementId = function(id) {
     if (id.charAt(0) !== '#') {
       return '#' + id;
     }
     return id;
   };
 
-  // Handle errors in the app
+  // Handle _errors in the app
   this.error = function(errorMessage, debugMessage) {
     if (!errorMessage) {
-      return error;
+      return _error;
     }
-    error = errorMessage;
-    debugError = debugMessage;
+    _error = errorMessage;
+    _debugError = debugMessage;
     console.error(debugMessage || errorMessage);
-    // alert(errorMessage);
+    // alert(_errorMessage);
   };
 
 
@@ -77,11 +79,11 @@ function Andraia(elementContainerId, userSettings) {
     var modelLoaded = null;
 
     if ($.isFunction(modelFunction)) {
-      self.models[modelName] = modelFunction;
+      _self.models[modelName] = modelFunction;
     }
 
-    if (!modelFunction && $.isFunction(self.models[modelName])) {
-      modelLoaded = new self.models[modelName](self.helpers);
+    if (!modelFunction && $.isFunction(_self.models[modelName])) {
+      modelLoaded = new _self.models[modelName](_self.helpers);
       return modelLoaded;
     }
   };
@@ -89,37 +91,37 @@ function Andraia(elementContainerId, userSettings) {
   // Add a model to memory
   // Shortcut to model()
   this.registerModel = function(modelName, modelFunction) {
-    return self.model(modelName, modelFunction);
+    return _self.model(modelName, modelFunction);
   };
 
   // Grab the model for your app
   this.loadModel = function(modelName) {
-    return self.model(modelName);
+    return _self.model(modelName);
   };
 
   // Check to see if a model is already loaded
   this.hasModel = function(modelName) {
-    return !!self.models[modelName];
+    return !!_self.models[modelName];
   };
 
 
   // Add helpers to memory for reusable functions
   this.registerHelper = function(name, helperFunction) {
     if ($.type(name) !== "string") {
-      return self.error('Could not register helper. The name is not a string.');
+      return _self._error('Could not register helper. The name is not a string.');
     }
 
     if ($.type(helperFunction) !== "function") {
-      return self.error('Could not register helper. The function is not a function.');
+      return _self._error('Could not register helper. The function is not a function.');
     }
 
-    self.helpers[name] = helperFunction;
+    _self.helpers[name] = helperFunction;
   };
 
 
   // This is where we store laoded templates
-  loadTemplate = function(id) {
-    var _elementId = getElementId(id),
+  _loadTemplate = function(id) {
+    var _elementId = _getElementId(id),
         deferred = $.Deferred();
 
     if ($(_elementId).size() > 0) {
@@ -131,7 +133,7 @@ function Andraia(elementContainerId, userSettings) {
     }
 
     // Example URL: templates/newView.html
-    $.get(settings.templateDirectory + _elementId.substr(1) + '.html', function(html) {
+    $.get(_settings.templateDirectory + _elementId.substr(1) + '.html', function(html) {
       _loadedTemplate = html;
       $('body').append('<script id="'+_elementId.substr(1)+'" type="text/html">'+html+'</script>');
       deferred.resolve();
@@ -143,24 +145,24 @@ function Andraia(elementContainerId, userSettings) {
 
   this.registerView = function(viewName, controllerFunction, data) {
 
-    viewName = getElementId(viewName);
+    viewName = _getElementId(viewName);
 
     // If the action item is a function then it must be a controller.
     // Add the controller function to memory
-    if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
-      self.controllers[viewName] = controllerFunction;
+    if ($.isFunction(controllerFunction)){ // && ($(_self.controllers).size() < 1 || !$.isFunction(_self.controllers[viewName]))) {
+      _self.controllers[viewName] = controllerFunction;
     }
 
     if (!!data) {
-      self.templateData[viewName] = data;
+      _self.templateData[viewName] = data;
     }
   };
 
 
   function loadController(viewName) {
     // Check to see if there is a controller for this view and then load it
-    if ($(self.controllers).size() > 0 && $.isFunction(self.controllers[viewName])) {
-      _controller = new self.controllers[viewName](self.helpers);
+    if ($(_self.controllers).size() > 0 && $.isFunction(_self.controllers[viewName])) {
+      _controller = new _self.controllers[viewName](_self.helpers);
     }
 
     // If there is a data returned from the controller we assume it is meant to be used for template
@@ -168,7 +170,7 @@ function Andraia(elementContainerId, userSettings) {
       return _controller;
     }
     // There was no data from the controller but their might be data registered for this view
-    return self.templateData[viewName];
+    return _self.templateData[viewName];
   }
 
 
@@ -190,25 +192,25 @@ function Andraia(elementContainerId, userSettings) {
 
   //   var _template;
 
-  //   viewName = getElementId(viewName);
+  //   viewName = _getElementId(viewName);
 
   //   // If the action item is a function then it must be a controller.
   //   // Add the controller function to memory
-  //   if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
-  //     self.controllers[viewName] = controllerFunction;
+  //   if ($.isFunction(controllerFunction)){ // && ($(_self.controllers).size() < 1 || !$.isFunction(_self.controllers[viewName]))) {
+  //     _self.controllers[viewName] = controllerFunction;
   //   }
 
   //   if (!!data) {
-  //     self.templateData[viewName] = data;
+  //     _self.templateData[viewName] = data;
   //   }
 
   //   // Load the template. When the template is loaded we will apply any 
   //   // templating as necessary and load the controller for the view
-  //   loadTemplate(viewName).done(function(){
+  //   _loadTemplate(viewName).done(function(){
   //     // Run the templating engine on the template using any user-defined data
-  //     _loadedTemplate = self.template(_loadedTemplate, _data);
+  //     _loadedTemplate = _self.template(_loadedTemplate, _data);
   //     // Slide the page to this view
-  //     slider.slidePage($(_loadedTemplate), "left");
+  //     _slider.slidePage($(_loadedTemplate), "left");
 
   //     // If there is a controller for this view, load it
   //     _data = loadController(viewName);
@@ -223,41 +225,41 @@ function Andraia(elementContainerId, userSettings) {
 
   // Shortcut to view specifically for loading a view
   this.loadView = function(viewName) {
-    viewName = getElementId(viewName);
+    viewName = _getElementId(viewName);
 
-    if (settings.enableRouter && !self.router.currentPage || self.router.currentPage !== viewName) {
+    if (_settings.enableRouter && !_self.router.currentPage || _self.router.currentPage !== viewName) {
       window.location.hash = viewName;
     }
 
-    if (settings.enablePageslider && $.isFunction(PageSlider) && !slider) {
-      slider = new PageSlider($(elementContainerId));
+    if (_settings.enablePageslider && $.isFunction(PageSlider) && !_slider) {
+      _slider = new PageSlider($(elementContainerId));
     }
 
     // Load the template. When the template is loaded we will apply any 
     // templating as necessary and load the controller for the view
-    loadTemplate(viewName).done(function() {
+    _loadTemplate(viewName).done(function() {
       
       resetBindings();
 
-      _data = self.templateData[viewName];
+      _data = _self.templateData[viewName];
       if ($.isFunction(_data)) {
         _data = _data();
-        self.templateData[viewName] = _data;
+        _self.templateData[viewName] = _data;
       }
 
       // Run the templating engine on the template using any user-defined data
-      _loadedTemplate = self.template(_loadedTemplate, _data);
+      _loadedTemplate = _self.template(_loadedTemplate, _data);
       
       // Slide the page to this view
-      if (!!slider) {
-        slider.slidePage($(_loadedTemplate), "left");
+      if (!!_slider) {
+        _slider.slidePage($(_loadedTemplate), "left");
       } else {
         $(elementContainerId).html(_loadedTemplate);
       }
 
       loadController(viewName);
 
-      // $(elementContainerId).html(self.template($(elementContainerId).html(), _data));
+      // $(elementContainerId).html(_self.template($(elementContainerId).html(), _data));
 
       $.each(_bindings, function(id, binding) {
         $(binding.selector).unbind(binding.bindType + '.' + viewName);
@@ -278,7 +280,7 @@ function Andraia(elementContainerId, userSettings) {
 
     function isEngine(engineType) {
       // Get the lowercase version of the template engine name (for consistency)
-      var usersTemplateEngine = settings.templateEngine.toLowerCase();
+      var usersTemplateEngine = _settings.templateEngine.toLowerCase();
       // Check for this engine type in the users selected template engine
       // E.g. search for "mustache in Mustache.js"
       return usersTemplateEngine.indexOf(engineType) >= 0;
@@ -318,7 +320,7 @@ function Andraia(elementContainerId, userSettings) {
     }
 
     if (!_templateEngine) {
-      self.error('No template engine loaded');
+      _self._error('No template engine loaded');
     }
 
     if (!template) {
@@ -337,7 +339,7 @@ function Andraia(elementContainerId, userSettings) {
   
   // A shortcut for adding templating to the app
   this.registerTemplating = function(templateFunction) {
-    return self.template(templateFunction);
+    return _self.template(templateFunction);
   };
 
 
@@ -346,13 +348,13 @@ function Andraia(elementContainerId, userSettings) {
     htmlString = "" + htmlString;
 
     if (htmlString.indexOf('.html') > -1) {
-      self.error('This option is not yet available. Cannot load header or footer template from external file.');
+      _self._error('This option is not yet available. Cannot load header or footer template from external file.');
       return console.log('Go get template');
     }
 
     // If there are no HTML tags and the headerHtml string is the id of an element let's get the HTML of that element
-    if (htmlString.indexOf('<') < 0 && $(getElementId(htmlString)).size() > 0) {
-      htmlString = $(getElementId(htmlString)).html();
+    if (htmlString.indexOf('<') < 0 && $(_getElementId(htmlString)).size() > 0) {
+      htmlString = $(_getElementId(htmlString)).html();
     }
 
     return htmlString;
@@ -373,10 +375,10 @@ function Andraia(elementContainerId, userSettings) {
     elementContainerId = 'body';
   }
   else {
-    elementContainerId = getElementId(elementContainerId);
+    elementContainerId = _getElementId(elementContainerId);
   }
 
-  if (settings.enableFastclick) {
+  if (_settings.enableFastclick) {
     window.addEventListener('load', function () {
       new FastClick(window.document.body);
     }, false);
@@ -386,26 +388,26 @@ function Andraia(elementContainerId, userSettings) {
   this.router = {
     currentPage: window.location.hash,
     changePage: function (pageId) {
-      pageId = getElementId(pageId);
+      pageId = _getElementId(pageId);
 
       // If there is no current page we do not want to load the view until the app is ready.
-      if (!!self.router.currentPage) {
-        self.loadView(pageId);
+      if (!!_self.router.currentPage) {
+        _self.loadView(pageId);
       }
 
-      if (!self.router.currentPage || self.router.currentPage === pageId) {
+      if (!_self.router.currentPage || _self.router.currentPage === pageId) {
         window.location.hash = pageId;
       }
 
-      self.router.currentPage = pageId;
+      _self.router.currentPage = pageId;
     }
   };
 
-  if (settings.enableRouter) {
+  if (_settings.enableRouter) {
     var pageHash = '';
 
     window.addEventListener('hashchange', function () {
-      var changePage = self.router.changePage;
+      var changePage = _self.router.changePage;
       pageHash = window.location.hash;
       if (!!pageHash) {
         changePage(pageHash);
@@ -413,15 +415,15 @@ function Andraia(elementContainerId, userSettings) {
     });
   }
 
-  if (settings.pageTransitionSpeed !== defaultSettings.pageTransitionSpeed) {
+  if (_settings.pageTransitionSpeed !== _defaultSettings.pageTransitionSpeed) {
     // Add styles to overwrite the page transition speed at the end of the head
     // The default is 0.25. 
     // Don't bother with the overwrite if the user is using the default
     $('head').append(' ' +
       '<style>' +
       '  .page.transition {' +
-      '    -webkit-transition-duration: ' + settings.pageTransitionSpeed + 's;' +
-      '    transition-duration: ' + settings.pageTransitionSpeed + 's;' +
+      '    -webkit-transition-duration: ' + _settings.pageTransitionSpeed + 's;' +
+      '    transition-duration: ' + _settings.pageTransitionSpeed + 's;' +
       '  }' +
       '</style>');
   }

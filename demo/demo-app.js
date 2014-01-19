@@ -38,6 +38,7 @@ app.registerModel('User', function(helper) {
 
 // To use the model, say in a controller (or anywhere)
 var user = app.loadModel('User');
+console.log('The User model has been properly loaded. Check out some values:');
 console.log("User's name:", user.fullName() );
 console.log("User's age:", user.age() + ' seconds old');
 
