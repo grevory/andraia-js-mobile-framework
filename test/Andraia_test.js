@@ -145,12 +145,20 @@
         "quote": "Shiver me templates!"
       });
 
+      // Register a view with data to compile returned from the controller
+      testAndraia.registerView('test-view3', null, function() {
+        return {
+          "character": "Bob",
+          "quote": "I've got to help the User? Heh, there's a first time for everything."
+        }
+      });
+
       testAndraia.registerHelper('add', function(a, b){
         return a + b;
       });
 
       // Register a view with a helper in the controller
-      testAndraia.registerView('test-view3', function(helper) {
+      testAndraia.registerView('test-view4', function(helper) {
         $('#game-cube p').append(helper.add(1, 2));
       });
     }
@@ -168,9 +176,15 @@
     strictEqual($(testContainerId).html(), '<div><p>Captain Capacitor: "Shiver me templates!"</p><p>Cecil: "Tea? Earl Grey? Hot? What in the net is that?"</p></div>', 'The app view should contain compiled markup from the view plus markup added from within the controller.');
   });
 
-  test('Does the loaded view use helpers', function(){
+  test('Does the loaded view properly render and compile data from a data function', function(){
     expect(1);
     testAndraia.loadView('test-view3');
+    strictEqual($(testContainerId).html(), '<div><p>Bob: "I\'ve got to help the User? Heh, there\'s a first time for everything."</p></div>', 'The app view should contain compiled markup from the view based on a data function.');
+  });
+
+  test('Does the loaded view use helpers', function(){
+    expect(1);
+    testAndraia.loadView('test-view4');
     strictEqual($(testContainerId).html(), '<div><p>1 + 2 = 3</p></div>', 'The app helper should execute and update the view.');
   });
 

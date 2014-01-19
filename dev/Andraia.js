@@ -29,10 +29,10 @@ function Andraia(elementContainerId, userSettings) {
       _templateHeader = '',
       _templateFooter = '',
       _loadedTemplate = '',
-      _data = null;
+      _data = null,
       _controller = null,
       _bindings = [],
-      error = null, 
+      error = null,
       debugError = null;
 
   defaultSettings = {
@@ -192,39 +192,40 @@ function Andraia(elementContainerId, userSettings) {
 
 
   // The generic view method for loading views and storing controllers
-  this.view = function(viewName, controllerFunction, data) {
+  // this.view = function(viewName, controllerFunction, data) {
 
-    var _template;
+  //   var _template;
 
-    viewName = getElementId(viewName);
+  //   viewName = getElementId(viewName);
 
-    // If the action item is a function then it must be a controller.
-    // Add the controller function to memory
-    if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
-      self.controllers[viewName] = controllerFunction;
-    }
+  //   // If the action item is a function then it must be a controller.
+  //   // Add the controller function to memory
+  //   if ($.isFunction(controllerFunction)){ // && ($(self.controllers).size() < 1 || !$.isFunction(self.controllers[viewName]))) {
+  //     self.controllers[viewName] = controllerFunction;
+  //   }
 
-    if (!!data) {
-      self.templateData[viewName] = data;
-    }
+  //   if (!!data) {
+  //     self.templateData[viewName] = data;
+  //   }
 
-    // Load the template. When the template is loaded we will apply any 
-    // templating as necessary and load the controller for the view
-    loadTemplate(viewName).done(function(){
-      // If there is a controller for this view, load it
-      _data = loadController(viewName);
+  //   // Load the template. When the template is loaded we will apply any 
+  //   // templating as necessary and load the controller for the view
+  //   loadTemplate(viewName).done(function(){
+  //     // Run the templating engine on the template using any user-defined data
+  //     _loadedTemplate = self.template(_loadedTemplate, _data);
+  //     // Slide the page to this view
+  //     slider.slidePage($(_loadedTemplate), "left");
 
-      // Run the templating engine on the template using any user-defined data
-      _loadedTemplate = self.template(_loadedTemplate, _data);
-      // Slide the page to this view
-      slider.slidePage($(_loadedTemplate), "left");
-      if (_bindings[viewName]){
-        $.each(_bindings[viewName], function(i,v) {
-          console(i,v);
-        })
-      }
-    });
-  };
+  //     // If there is a controller for this view, load it
+  //     _data = loadController(viewName);
+
+  //     if (_bindings[viewName]){
+  //       $.each(_bindings[viewName], function(i,v) {
+  //         console(i,v);
+  //       })
+  //     }
+  //   });
+  // };
 
   // Shortcut to view specifically for loading a view
   this.loadView = function(viewName) {
@@ -243,8 +244,12 @@ function Andraia(elementContainerId, userSettings) {
     loadTemplate(viewName).done(function() {
       
       resetBindings();
-      // If there is a controller for this view, load it
-      _data = loadController(viewName);
+
+      _data = self.templateData[viewName];
+      if ($.isFunction(_data)) {
+        _data = _data();
+        self.templateData[viewName] = _data;
+      }
 
       // Run the templating engine on the template using any user-defined data
       _loadedTemplate = self.template(_loadedTemplate, _data);
@@ -255,6 +260,10 @@ function Andraia(elementContainerId, userSettings) {
       } else {
         $(elementContainerId).html(_loadedTemplate);
       }
+
+      loadController(viewName);
+
+      // $(elementContainerId).html(self.template($(elementContainerId).html(), _data));
 
       $.each(_bindings, function(id, binding) {
         $(binding.selector).unbind(binding.bindType + '.' + viewName);

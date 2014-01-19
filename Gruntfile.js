@@ -76,10 +76,10 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', [
-    'jshint', 
-    'qunit', 
-    'concat', 
-    'uglify'
+    'jshint',
+    'concat',
+    'uglify',
+    'qunit'
   ]);
 
   grunt.registerTask('minify', [

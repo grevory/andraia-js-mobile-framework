@@ -29,14 +29,20 @@
 <div>
   <h3>A new view in Andraia</h3>
   <p><img src="templates/andraia.jpg" width="100%" style="max-height: 200px"></p>
-  <p><a href="#loginView" class="btn btn-primary">Back to login view</a></p>
+  <p>
+    <a href="#seriesView" class="btn btn-primary pull-right">ReBoot</a>
+    <a href="#loginView" class="btn btn-primary">Back to login view</a>
+  </p>
 </div>
 </script>
 
-<script id="thirdView" type="text/html">
+<script id="seriesView" type="text/html">
 <div>
-  <h3>Third view</h3>
-  <p><img src="templates/andraia.jpg" width="40"></p>
+  <img src="{{ posterUrl }}" style="max-width: 200px; float: right;">
+  <h3>{{ title }}</h3>
+  <p><strong>Years:</strong> {{ years }}</p>
+  <p><strong>Plot Summary:</strong> {{ plot }}</p>
+  <p><strong>Genre:</strong> {{ genre }}</p>
   <p><a href="#loginView" class="btn btn-primary">Back to login view</a></p>
 </div>
 </script>

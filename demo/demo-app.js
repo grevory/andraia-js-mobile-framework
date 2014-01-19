@@ -59,6 +59,19 @@ app.registerHelper('add', function(a, b){
   return a + b;
 });
 
+// Establish models from AJAX calls the cheap way:
+$.getJSON('http://www.omdbapi.com/?i=&t=reboot', function(data) {
+  app.registerModel('series', function() {
+    return {
+      'title': data.Title,
+      'years': data.Year,
+      'posterUrl': data.Poster,
+      'plot': data.Plot,
+      'genre': data.Genre
+    };
+  });
+});
+
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
 
 var loginCtrl = function(helper) {
@@ -72,11 +85,6 @@ var loginCtrl = function(helper) {
 
   var sum = helper.add(1,2);
   console.log(sum);
-
-  // Overwrite the data passed in as the view was registered
-  return {
-    'format': 'Virus'
-  };
 };
 
 var loginData = {
@@ -85,13 +93,11 @@ var loginData = {
 app.registerView('loginView', loginCtrl, loginData);
 
 app.registerView('andraiaView', function(){
-  console.log('andraiaView');
+  console.log('andraiaView controller has been properly executed.');
 });
 
-app.registerView('thirdView', function(){
-  console.log('thirdView');
-}, {
-  'data': 'test'
+app.registerView('seriesView', null, function() {
+  return app.loadModel('series');
 });
 
 app.loadView('loginView');
