@@ -75,13 +75,6 @@ function Andraia(elementContainerId, userSettings) {
 
   if (_settings.enableRouter) {
     var _history = [];
-
-    function addToHistory(pageHash) {
-      if (_history.length >= _settings.maxHistory) {
-        _history = _history.slice(1);
-      }
-      _history.push(pageHash);
-    }
   }
 
   // Handle _errors in the app
@@ -414,7 +407,7 @@ function Andraia(elementContainerId, userSettings) {
     changePage: function (pageId) {
       pageId = _getElementId(pageId);
 
-      addToHistory(pageHash);
+      _self.router.addToHistory(pageHash);
 
       // If there is no current page we do not want to load the view until the app is ready.
       if (!!_self.router.currentPage) {
@@ -426,6 +419,12 @@ function Andraia(elementContainerId, userSettings) {
       }
 
       _self.router.currentPage = pageId;
+    },
+    addToHistory: function(pageHash) {
+      if (_history.length >= _settings.maxHistory) {
+        _history = _history.slice(1);
+      }
+      _history.push(pageHash);
     },
     goBack: function() {
       // If there is no history to go back don't bother trying to change the page
