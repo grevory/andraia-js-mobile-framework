@@ -1,6 +1,7 @@
 /*! Andraia - v0.1.0 - 2014-01-20
 * https://github.com/grevory/andraia-js-mobile-framework
 * Copyright (c) 2014 ; Licensed MIT */
+/* Use the following comments to define global variables for tests */
 /* global $:false */
 /* global console:false */
 /* global window:false */
@@ -16,20 +17,22 @@ function Andraia(elementContainerId, userSettings) {
   // Variables prefixed with underscores (_) are used throughout the app
   // but are not accessible outside of Andraia
   var _self = this,
-      // Settings vars
-      _defaultSettings = {}, _settings = {},
-      // The ID value of the element container
-      _getElementId = null,
-      // The PageSlide var
-      _slider = null,
-      // Loading templates
-      _loadTemplate = null, _loadedTemplate = '',
-      // Templating vars
-      _templateEngine = null, _templateHeader = '', _templateFooter = '',
-      // Data and controller vars
-      _data = null, _controller = null, _bindings = [],
-      // Error vars
-      _error = null, _debugError = null;
+    // Settings vars
+    _defaultSettings = {}, _settings = {},
+    // The ID value of the element container
+    _getElementId = null,
+    // The PageSlide var
+    _slider = null,
+    // Loading templates
+    _loadTemplate = null, _loadedTemplate = '',
+    // Templating vars
+    _templateEngine = null, _templateHeader = '', _templateFooter = '',
+    // Data stored in memory for the MVC
+    _controllers = {}, _models = {}, _helpers = {}, _templateData = {},      
+    // Data and controller vars
+    _data = null, _controller = null, _bindings = [],
+    // Error vars
+    _error = null, _debugError = null;
 
   _defaultSettings = {
     // The directory for storing templates to be loaded as views
@@ -51,13 +54,6 @@ function Andraia(elementContainerId, userSettings) {
   };
 
   $.extend(_settings, _defaultSettings, userSettings);
-
-  // Data in memory
-  this.controllers = {};
-  this.models = {};
-  this.helpers = {};
-  this.templateData = {};
-
   
   // Adds a hash to an element ID if it is not there for jQuery selectors
   _getElementId = function(id) {
@@ -90,11 +86,11 @@ function Andraia(elementContainerId, userSettings) {
     var modelLoaded = null;
 
     if ($.isFunction(modelFunction)) {
-      _self.models[modelName] = modelFunction;
+      _models[modelName] = modelFunction;
     }
 
-    if (!modelFunction && $.isFunction(_self.models[modelName])) {
-      modelLoaded = new _self.models[modelName](_self.helpers);
+    if (!modelFunction && $.isFunction(_models[modelName])) {
+      modelLoaded = new _models[modelName](_helpers);
       return modelLoaded;
     }
   };
@@ -112,7 +108,7 @@ function Andraia(elementContainerId, userSettings) {
 
   // Check to see if a model is already loaded
   this.hasModel = function(modelName) {
-    return !!_self.models[modelName];
+    return !!_models[modelName];
   };
 
 
@@ -126,7 +122,7 @@ function Andraia(elementContainerId, userSettings) {
       return _self._error('Could not register helper. The function is not a function.');
     }
 
-    _self.helpers[name] = helperFunction;
+    _helpers[name] = helperFunction;
   };
 
 
@@ -160,20 +156,20 @@ function Andraia(elementContainerId, userSettings) {
 
     // If the action item is a function then it must be a controller.
     // Add the controller function to memory
-    if ($.isFunction(controllerFunction)){ // && ($(_self.controllers).size() < 1 || !$.isFunction(_self.controllers[viewName]))) {
-      _self.controllers[viewName] = controllerFunction;
+    if ($.isFunction(controllerFunction)){
+      _controllers[viewName] = controllerFunction;
     }
 
     if (!!data) {
-      _self.templateData[viewName] = data;
+      _templateData[viewName] = data;
     }
   };
 
 
   function loadController(viewName) {
     // Check to see if there is a controller for this view and then load it
-    if ($(_self.controllers).size() > 0 && $.isFunction(_self.controllers[viewName])) {
-      _controller = new _self.controllers[viewName](_self.helpers);
+    if ($(_controllers).size() > 0 && $.isFunction(_controllers[viewName])) {
+      _controller = new _controllers[viewName](_helpers);
     }
 
     // If there is a data returned from the controller we assume it is meant to be used for template
@@ -181,7 +177,7 @@ function Andraia(elementContainerId, userSettings) {
       return _controller;
     }
     // There was no data from the controller but their might be data registered for this view
-    return _self.templateData[viewName];
+    return _templateData[viewName];
   }
 
 
@@ -223,10 +219,10 @@ function Andraia(elementContainerId, userSettings) {
       
       resetBindings();
 
-      _data = _self.templateData[viewName];
+      _data = _templateData[viewName];
       if ($.isFunction(_data)) {
         _data = _data();
-        _self.templateData[viewName] = _data;
+        _templateData[viewName] = _data;
       }
 
       // Run the templating engine on the template using any user-defined data
@@ -427,221 +423,6 @@ function Andraia(elementContainerId, userSettings) {
       '</style>');
   }
 }
-
-/**
- * @module ReferrerKiller
- */
-var ReferrerKiller = (function () {
-	var URL_REDIRECTION = "https://www.google.com/url?q=", // You can use another service if you use https protocol no referrer will be sent.
-		PUB = {},
-		IE_GT_8 = (function () {
-				/*- Detecting if it's IE greater than 8 -*/
-				var trident,
-					match = navigator.userAgent.match(/Trident\/(\d)+/);
-				if (null === match) {
-					return false;
-				}
-				trident = parseInt(match[1], 10);
-				if (isNaN(trident)) {
-					return false;
-				}
-				return trident > 4;
-		})();
-
-	/**
-	 * Escapes double quotes in a string.
-	 *
-	 * @private
-	 * @param {string} str
-	 * @return {string}
-	 */
-	function escapeDoubleQuotes(str) {
-		return str.split('"').join('\\"');
-	}
-	
-	/**
-	 * Given a html string returns an html node.
-	 *
-	 * @private
-	 * @param {string} html
-	 * @return {Node}
-	 */
-	function htmlToNode(html) {
-		var container = document.createElement('div');
-		container.innerHTML = html;
-		return container.firstChild;
-	}
-	
-	/**
-	 * Converts object to html attributes string.
-	 *
-	 * @private
-	 * @param {object} obj
-	 * @return {string}
-	 */
-	function objectToHtmlAttributes(obj) {
-		var attributes = [],
-			value;
-		for (var name in obj) {
-			value = obj[name];
-			attributes.push(name + '="' + escapeDoubleQuotes(value) + '"');
-		}
-		return attributes.join(' ');
-	}
-
-	/**
-	 * It applies the hack to kill the referrer to some html.
-	 *
-	 * @public
-	 * @param {string} html.
-	 * @param {object} [iframeAttributes]
-	 * @return {string} html.
-	 */
-	function htmlString(html, iframeAttributes) {
-		var iframeAttributes  = iframeAttributes || {},
-			defaultStyles = 'border:none; overflow:hidden; ',
-			id;
-		/*-- Setting default styles and letting the option to add more or overwrite them --*/
-		if ('style' in iframeAttributes) {
-			iframeAttributes.style =  defaultStyles + iframeAttributes.style;
-		} else {
-			iframeAttributes.style = defaultStyles;
-		}
-		id = '__referrer_killer_' + (new Date).getTime() + Math.floor(Math.random()*9999);
-		/*-- Returning html with the hack wrapper --*/
-		return '<iframe \
-				style="border 1px solid #ff0000" \
-				scrolling="no" \
-				frameborder="no" \
-				allowtransparency="true" ' +
-			/*-- Adding style attribute --*/
-			objectToHtmlAttributes( iframeAttributes ) +
-			'id="' + id + '" ' +
-			'	src="javascript:\'\
-			<!doctype html>\
-			<html>\
-			<head>\
-			<meta charset=\\\'utf-8\\\'>\
-			<style>*{margin:0;padding:0;border:0;}</style>\
-			</head>' +
-			/*-- Function to adapt iframe's size to content's size --*/
-			'<script>\
-				 function resizeWindow() {\
-					var elems  = document.getElementsByTagName(\\\'*\\\'),\
-						width  = 0,\
-						height = 0,\
-						first  = document.body.firstChild,\
-						elem;\
-					if (first.offsetHeight && first.offsetWidth) {\
-						width = first.offsetWidth;\
-						height = first.offsetHeight;\
-					} else {\
-						for (var i in elems) {\
-											elem = elems[i];\
-											if (!elem.offsetWidth) {\
-												continue;\
-											}\
-											width  = Math.max(elem.offsetWidth, width);\
-											height = Math.max(elem.offsetHeight, height);\
-						}\
-					}\
-					var ifr = parent.document.getElementById(\\\'' + id + '\\\');\
-					ifr.height = height;\
-					ifr.width  = width;\
-				}\
-			</script>' +
-			'<body onload=\\\'resizeWindow()\\\'>\' + decodeURIComponent(\'' +
-			/*-- Content --*/
-			encodeURIComponent(html) +
-		'\') +\'</body></html>\'"></iframe>';
-	}
-
-	/*-- Public interface --*/
-
-	/**
-	 * It creates a link without referrer.
-	 *
-	 * @public
-	 * @param {string} url
-	 * @param {string} innerHTML
-	 * @param {object} [anchorParams]
-	 * @param {object} [iframeAttributes]
-	 * @return {string} html
-	 */
-	function linkHtml(url, innerHTML, anchorParams, iframeAttributes) {
-		var html,
-			urlRedirection = '';
-		innerHTML = innerHTML || false;
-		/*-- If there is no innerHTML use the url as innerHTML --*/
-		if (!innerHTML) {
-			innerHTML = url;
-		}
-		anchorParams = anchorParams || {};
-		/*-- Making sure there is a target attribute and the value isn't '_self' --*/
-		if (!('target' in anchorParams) || '_self' === anchorParams.target) {
-			/*-- Converting _self to _top else it would open in the iframe container --*/
-			anchorParams.target = '_top';
-		}
-		if (IE_GT_8) {
-			urlRedirection = URL_REDIRECTION;
-		}
-		html = '<a rel="noreferrer" href="' + urlRedirection + escapeDoubleQuotes(url) + '" ' + objectToHtmlAttributes(anchorParams) + '>' + innerHTML + '</a>';
-		return htmlString(html, iframeAttributes);
-	}
-	PUB.linkHtml = linkHtml;
-	
-	/**
-	 * It creates a link without referrer.
-	 *
-	 * @public
-	 * @param {String} url
-	 * @param {String} innerHTML
-	 * @param {Object} [anchorParams]
-	 * @param {object} [iframeAttributes]
-	 * @return {Node}
-	 */
-	function linkNode(url, innerHTML, anchorParams, iframeAttributes) {
-		return htmlToNode(linkHtml(url, innerHTML, anchorParams, iframeAttributes));
-	}
-	PUB.linkNode = linkNode;
-	
-	/**
-	 * It displays an image without sending the referrer.
-	 *
-	 * @public
-	 * @param {String} url
-	 * @param {Object} [imgAttributesParam]
-	 * @return {String} html
-	 */
-	function imageHtml(url, imgAttributesParam) {
-		var imgAttributes = imgAttributesParam || {},
-		/*-- Making sure this styles are applyed in the image but let the possibility to overwrite them --*/
-			defaultStyles = 'border:none; margin: 0; padding: 0';
-		if ('style' in imgAttributes) {
-			imgAttributes.style = defaultStyles + imgAttributes.style;
-		} else {
-			imgAttributes.style = defaultStyles;
-		}
-		return htmlString('<img src="' + escapeDoubleQuotes(url) + '" ' + objectToHtmlAttributes(imgAttributes) + '/>');
-	}
-	PUB.imageHtml = imageHtml;
-	
-	/**
-	 * It displays an image without sending the referrer.
-	 *
-	 * @public
-	 * @param {string} url
-	 * @param {object} [imgParams]
-	 * @return {Node}
-	 */
-	function imageNode(url, imgParams) {
-		return htmlToNode(imageHtml(url, imgParams));
-	}
-	PUB.imageNode = imageNode;
-
-	/*-- Exposing the module interface --*/
-	return PUB;
-})();
 
 /*jslint browser:true, node:true*/
 /*global define, Event, Node*/
