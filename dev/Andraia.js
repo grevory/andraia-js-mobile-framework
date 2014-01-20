@@ -204,42 +204,6 @@ function Andraia(elementContainerId, userSettings) {
   }
 
 
-  // The generic view method for loading views and storing controllers
-  // this.view = function(viewName, controllerFunction, data) {
-
-  //   var _template;
-
-  //   viewName = _getElementId(viewName);
-
-  //   // If the action item is a function then it must be a controller.
-  //   // Add the controller function to memory
-  //   if ($.isFunction(controllerFunction)){ // && ($(_self.controllers).size() < 1 || !$.isFunction(_self.controllers[viewName]))) {
-  //     _self.controllers[viewName] = controllerFunction;
-  //   }
-
-  //   if (!!data) {
-  //     _self.templateData[viewName] = data;
-  //   }
-
-  //   // Load the template. When the template is loaded we will apply any 
-  //   // templating as necessary and load the controller for the view
-  //   _loadTemplate(viewName).done(function(){
-  //     // Run the templating engine on the template using any user-defined data
-  //     _loadedTemplate = _self.template(_loadedTemplate, _data);
-  //     // Slide the page to this view
-  //     _slider.slidePage($(_loadedTemplate), "left");
-
-  //     // If there is a controller for this view, load it
-  //     _data = loadController(viewName);
-
-  //     if (_bindings[viewName]){
-  //       $.each(_bindings[viewName], function(i,v) {
-  //         console(i,v);
-  //       })
-  //     }
-  //   });
-  // };
-
   // Shortcut to view specifically for loading a view
   this.loadView = function(viewName) {
     viewName = _getElementId(viewName);
