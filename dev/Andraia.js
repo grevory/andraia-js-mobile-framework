@@ -23,20 +23,22 @@ function Andraia(elementContainerId, userSettings) {
   // Variables prefixed with underscores (_) are used throughout the app
   // but are not accessible outside of Andraia
   var _self = this,
-      // Settings vars
-      _defaultSettings = {}, _settings = {},
-      // The ID value of the element container
-      _getElementId = null,
-      // The PageSlide var
-      _slider = null,
-      // Loading templates
-      _loadTemplate = null, _loadedTemplate = '',
-      // Templating vars
-      _templateEngine = null, _templateHeader = '', _templateFooter = '',
-      // Data and controller vars
-      _data = null, _controller = null, _bindings = [],
-      // Error vars
-      _error = null, _debugError = null;
+    // Settings vars
+    _defaultSettings = {}, _settings = {},
+    // The ID value of the element container
+    _getElementId = null,
+    // The PageSlide var
+    _slider = null,
+    // Loading templates
+    _loadTemplate = null, _loadedTemplate = '',
+    // Templating vars
+    _templateEngine = null, _templateHeader = '', _templateFooter = '',
+    // Data stored in memory for the MVC
+    _controllers = {}, _models = {}, _helpers = {}, _templateData = {},      
+    // Data and controller vars
+    _data = null, _controller = null, _bindings = [],
+    // Error vars
+    _error = null, _debugError = null;
 
   _defaultSettings = {
     // The directory for storing templates to be loaded as views
@@ -58,13 +60,6 @@ function Andraia(elementContainerId, userSettings) {
   };
 
   $.extend(_settings, _defaultSettings, userSettings);
-
-  // Data in memory
-  this.controllers = {};
-  this.models = {};
-  this.helpers = {};
-  this.templateData = {};
-
   
   // Adds a hash to an element ID if it is not there for jQuery selectors
   _getElementId = function(id) {
@@ -97,11 +92,11 @@ function Andraia(elementContainerId, userSettings) {
     var modelLoaded = null;
 
     if ($.isFunction(modelFunction)) {
-      _self.models[modelName] = modelFunction;
+      _models[modelName] = modelFunction;
     }
 
-    if (!modelFunction && $.isFunction(_self.models[modelName])) {
-      modelLoaded = new _self.models[modelName](_self.helpers);
+    if (!modelFunction && $.isFunction(_models[modelName])) {
+      modelLoaded = new _models[modelName](_helpers);
       return modelLoaded;
     }
   };
@@ -119,7 +114,7 @@ function Andraia(elementContainerId, userSettings) {
 
   // Check to see if a model is already loaded
   this.hasModel = function(modelName) {
-    return !!_self.models[modelName];
+    return !!_models[modelName];
   };
 
 
@@ -133,7 +128,7 @@ function Andraia(elementContainerId, userSettings) {
       return _self._error('Could not register helper. The function is not a function.');
     }
 
-    _self.helpers[name] = helperFunction;
+    _helpers[name] = helperFunction;
   };
 
 
@@ -167,20 +162,20 @@ function Andraia(elementContainerId, userSettings) {
 
     // If the action item is a function then it must be a controller.
     // Add the controller function to memory
-    if ($.isFunction(controllerFunction)){ // && ($(_self.controllers).size() < 1 || !$.isFunction(_self.controllers[viewName]))) {
-      _self.controllers[viewName] = controllerFunction;
+    if ($.isFunction(controllerFunction)){
+      _controllers[viewName] = controllerFunction;
     }
 
     if (!!data) {
-      _self.templateData[viewName] = data;
+      _templateData[viewName] = data;
     }
   };
 
 
   function loadController(viewName) {
     // Check to see if there is a controller for this view and then load it
-    if ($(_self.controllers).size() > 0 && $.isFunction(_self.controllers[viewName])) {
-      _controller = new _self.controllers[viewName](_self.helpers);
+    if ($(_controllers).size() > 0 && $.isFunction(_controllers[viewName])) {
+      _controller = new _controllers[viewName](_helpers);
     }
 
     // If there is a data returned from the controller we assume it is meant to be used for template
@@ -188,7 +183,7 @@ function Andraia(elementContainerId, userSettings) {
       return _controller;
     }
     // There was no data from the controller but their might be data registered for this view
-    return _self.templateData[viewName];
+    return _templateData[viewName];
   }
 
 
@@ -230,10 +225,10 @@ function Andraia(elementContainerId, userSettings) {
       
       resetBindings();
 
-      _data = _self.templateData[viewName];
+      _data = _templateData[viewName];
       if ($.isFunction(_data)) {
         _data = _data();
-        _self.templateData[viewName] = _data;
+        _templateData[viewName] = _data;
       }
 
       // Run the templating engine on the template using any user-defined data
