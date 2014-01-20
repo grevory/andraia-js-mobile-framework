@@ -244,8 +244,15 @@ function Andraia(elementContainerId, userSettings) {
   this.loadView = function(viewName) {
     viewName = _getElementId(viewName);
 
-    if (_settings.enableRouter && !_self.router.currentPage || _self.router.currentPage !== viewName) {
-      window.location.hash = viewName;
+    if (_settings.enableRouter) {
+      // Change the hash on load if necessary
+      if (!_self.router.currentPage || _self.router.currentPage !== viewName) {
+        window.location.hash = viewName;
+      }
+      // If this is the first load and no hashchange is needed, start the history
+      else if (!!_history && !_history.length) {
+        _history.push(viewName);
+      }
     }
 
     if (_settings.enablePageslider && $.isFunction(PageSlider) && !_slider) {
