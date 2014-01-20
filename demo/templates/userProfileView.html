@@ -21,6 +21,11 @@
   .margin-top10 {
     margin-top: 10px;
   }
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>
   <div class="row">
     <div class="col-xs-4 profile-pic">
@@ -34,7 +39,7 @@
           <i class="glyphicon glyphicon-map-marker"></i>
         </cite>
       </small>
-      <p>
+      <p class="truncate">
         <i class="glyphicon glyphicon-envelope"></i>enzo@reboot.com
         <br>
         <i class="glyphicon glyphicon-globe"></i>

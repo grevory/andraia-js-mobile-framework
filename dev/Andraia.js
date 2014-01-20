@@ -7,6 +7,7 @@
  * Licensed under the MIT license.
  */
 
+/* Use the following comments to define global variables for tests */
 /* global $:false */
 /* global console:false */
 /* global window:false */
