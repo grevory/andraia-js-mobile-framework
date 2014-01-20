@@ -44,6 +44,20 @@ With that element in place (You can use whatever id you like), you can initiate 
 var myApp = new Andraia('game-cube');
 ```
 
+You can initialize the app with a number of app-specific settings.
+
+Here are all settings with their default values and definitions:
+```javascript
+var myApp = new Andraia('game-cube', {
+  'templateDirectory': 'templates/' // String - The directory for storing templates to be loaded as views
+  'enablePageslider': true // Boolean - Turns on or off the PageSlider script for hardware-accelerated CSS transitions
+  'enableFastclick': true // Boolean - Turns on or off FastClick which is used in PageSlider
+  'enableRouter': true // Boolean - Use an automatic router by default. Turn it off to use your own
+  'maxHistory': 8 // Integer - Maximum number of hashes to be stored in history
+  'templateEngine': '' // String [underscore|mustache|handlbars|ejs] - Library that will compile templates
+  'pageTransitionSpeed': 0.25 // Float - // How fast pages transition via CSS
+});
+```
 
 Models
 ------
