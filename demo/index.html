@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Andraia - Lightweight Mobile MVC Framework</title>
-    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="initial-scale=1, user-scalable=no, width=device-width">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootswatch/3.0.3/yeti/bootstrap.min.css">
     <link rel="stylesheet" href="../lib/pageslider.css">
 </head>
@@ -25,25 +25,14 @@
   </div>
 </script>
 
-<script id="andraiaView" type="text/html">
-<div>
-  <h3>A new view in Andraia</h3>
-  <p><img src="templates/andraia.jpg" width="100%" style="max-height: 200px"></p>
-  <p>
-    <a href="#seriesView" class="btn btn-primary pull-right">ReBoot</a>
-    <a href="#loginView" class="btn btn-primary">Back to login view</a>
-  </p>
-</div>
-</script>
-
-<script id="seriesView" type="text/html">
+<script id="rebootView" type="text/html">
 <div>
   <img src="{{ posterUrl }}" style="max-width: 200px; float: right;">
   <h3>{{ title }}</h3>
   <p><strong>Years:</strong> {{ years }}</p>
   <p><strong>Plot Summary:</strong> {{ plot }}</p>
   <p><strong>Genre:</strong> {{ genre }}</p>
-  <p><a href="#loginView" class="btn btn-primary">Back to login view</a></p>
+  <p><a href="#" onclick="goBack(); return false;" class="btn btn-primary">Back</a></p>
 </div>
 </script>
 

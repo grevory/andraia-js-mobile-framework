@@ -76,6 +76,11 @@ $.getJSON('http://www.omdbapi.com/?i=&t=reboot', function(data) {
 app.error('Something went wrong', 'Could not perform certain task [errorCode 1142]');
 
 var loginCtrl = function(helper) {
+  $("form").submit(function(e){
+    e.preventDefault(e);
+    window.location.hash = "#userProfileView";
+  });
+
   app.bind('[name=email]', 'blur', function(){
     console.log($(this).val());
   });
@@ -93,12 +98,14 @@ var loginData = {
 };
 app.registerView('loginView', loginCtrl, loginData);
 
-app.registerView('andraiaView', function(){
-  console.log('andraiaView controller has been properly executed.');
-});
+app.registerView('userProfileView');
 
-app.registerView('seriesView', null, function() {
+app.registerView('rebootView', null, function() {
   return app.loadModel('series');
 });
 
 app.loadView('loginView');
+
+function goBack(){
+  app.router.goBack();
+}

@@ -38,14 +38,21 @@ function Andraia(elementContainerId, userSettings) {
       _error = null, _debugError = null;
 
   _defaultSettings = {
+    // The directory for storing templates to be loaded as views
     'templateDirectory': 'templates/',
-    
+    // PageSlider is a script for hardware-accelerated CSS transitions
     'enablePageslider': true,
+    // PageSlide uses FastClick
     'enableFastclick': true,
+    // Use an automatic router by default
+    // Turn it off to use your own
     'enableRouter': true,
-
+    // Maximum number of hashes to be stored in history
+    // We don't want to store too much in memory
+    'maxHistory': 8,
+    // Could be Underscore, Handlebars, Mustache, 
     'templateEngine': '',
-
+    // How fast pages transition
     'pageTransitionSpeed': 0.25
   };
 
@@ -65,6 +72,17 @@ function Andraia(elementContainerId, userSettings) {
     }
     return id;
   };
+
+  if (_settings.enableRouter) {
+    var _history = [];
+
+    function addToHistory(pageHash) {
+      if (_history.length >= _settings.maxHistory) {
+        _history = _history.slice(1);
+      }
+      _history.push(pageHash);
+    }
+  }
 
   // Handle _errors in the app
   this.error = function(errorMessage, debugMessage) {
@@ -396,6 +414,8 @@ function Andraia(elementContainerId, userSettings) {
     changePage: function (pageId) {
       pageId = _getElementId(pageId);
 
+      addToHistory(pageHash);
+
       // If there is no current page we do not want to load the view until the app is ready.
       if (!!_self.router.currentPage) {
         _self.loadView(pageId);
@@ -406,6 +426,15 @@ function Andraia(elementContainerId, userSettings) {
       }
 
       _self.router.currentPage = pageId;
+    },
+    goBack: function() {
+      // If there is no history to go back don't bother trying to change the page
+      if (!_history || !_history.length || _history.length <= 1) {
+        return;
+      }
+      // We get -2 of the length because we want the last item in history and
+      // JS arrays are 0-indexed
+      window.location.hash = _history[_history.length - 2];
     }
   };
 
