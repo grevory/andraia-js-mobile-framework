@@ -38,7 +38,7 @@ You need an element with an id attribute in order for Andraia to work. The eleme
 <div id="game-cube"></div>
 ```
 
-With that element in place (You can use whatever id you like), you can initiate the framework.
+With that element in place (you can use whatever id you like), you can initiate the framework.
 
 ```javascript
 var myApp = new Andraia('game-cube');
@@ -188,8 +188,13 @@ var loginData = {
 app.view('loginView', loginCtrl, loginData);
 ```
 
-## Examples
-_(Coming soon)_
+The value for loginData in this example is a javascript object. You can also pass in a function that returns a javascript object. Something like:
+
+```javascript
+app.registerView('userProfileView', null, function() {
+  return app.loadModel('users');
+});
+```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
@@ -197,7 +202,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 _Also, please don't edit files in the "[src](https://github.com/grevory/andraia-js-mobile-framework/tree/master/src)" subdirectory as they are generated via Grunt. You'll find source code in the "[dev](https://github.com/grevory/andraia-js-mobile-framework/tree/master/dev)" subdirectory!_
 
 ## Release History
-_(Nothing yet)_
+January 20, 2014 - Ongoing Alpha release
 
 ## License
 Copyright (c) 2014 Gregory Pike
