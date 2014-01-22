@@ -1,4 +1,4 @@
-/*! Andraia - v0.1.0 - 2014-01-20
+/*! Andraia - v0.1.0 - 2014-01-21
 * https://github.com/grevory/andraia-js-mobile-framework
 * Copyright (c) 2014 ; Licensed MIT */
 /* Use the following comments to define global variables for tests */
@@ -78,32 +78,19 @@ function Andraia(elementContainerId, userSettings) {
     // alert(_errorMessage);
   };
 
-
-  // Model
-  // A generic function for handling models
-  this.model = function(modelName, modelFunction) {
-
-    var modelLoaded = null;
-
-    if ($.isFunction(modelFunction)) {
-      _models[modelName] = modelFunction;
-    }
-
-    if (!modelFunction && $.isFunction(_models[modelName])) {
-      modelLoaded = new _models[modelName](_helpers);
-      return modelLoaded;
-    }
-  };
-
   // Add a model to memory
   // Shortcut to model()
   this.registerModel = function(modelName, modelFunction) {
-    return _self.model(modelName, modelFunction);
+    if ($.isFunction(modelFunction)) {
+      _models[modelName] = modelFunction;
+    }
   };
 
   // Grab the model for your app
   this.loadModel = function(modelName) {
-    return _self.model(modelName);
+    if ($.isFunction(_models[modelName])) {
+      return new _models[modelName](_helpers);
+    }
   };
 
   // Check to see if a model is already loaded

@@ -84,32 +84,19 @@ function Andraia(elementContainerId, userSettings) {
     // alert(_errorMessage);
   };
 
-
-  // Model
-  // A generic function for handling models
-  this.model = function(modelName, modelFunction) {
-
-    var modelLoaded = null;
-
-    if ($.isFunction(modelFunction)) {
-      _models[modelName] = modelFunction;
-    }
-
-    if (!modelFunction && $.isFunction(_models[modelName])) {
-      modelLoaded = new _models[modelName](_helpers);
-      return modelLoaded;
-    }
-  };
-
   // Add a model to memory
   // Shortcut to model()
   this.registerModel = function(modelName, modelFunction) {
-    return _self.model(modelName, modelFunction);
+    if ($.isFunction(modelFunction)) {
+      _models[modelName] = modelFunction;
+    }
   };
 
   // Grab the model for your app
   this.loadModel = function(modelName) {
-    return _self.model(modelName);
+    if ($.isFunction(_models[modelName])) {
+      return new _models[modelName](_helpers);
+    }
   };
 
   // Check to see if a model is already loaded
